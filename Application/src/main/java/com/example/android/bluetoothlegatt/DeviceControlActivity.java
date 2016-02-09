@@ -34,8 +34,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,25 +123,29 @@ public class DeviceControlActivity extends Activity {
     AdapterView.OnItemClickListener servicesListClickListner = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            if (mGattCharacteristics != null) {
-//                final BluetoothGattCharacteristic characteristic =
-//                        mGattCharacteristics.get(groupPosition).get(childPosition);
-//                final int charaProp = characteristic.getProperties();
-//                if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
-//                    // If there is an active notification on a characteristic, clear
-//                    // it first so it doesn't update the data field on the user interface.
-//                    if (mNotifyCharacteristic != null) {
-//                        mBluetoothLeService.setCharacteristicNotification(
-//                                mNotifyCharacteristic, false);
-//                        mNotifyCharacteristic = null;
-//                    }
-//                    mBluetoothLeService.readCharacteristic(characteristic);
-//                }
-//                if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
-//                    mNotifyCharacteristic = characteristic;
-//                    mBluetoothLeService.setCharacteristicNotification(
-//                            characteristic, true);
-//                }
+            Toast.makeText(getBaseContext(), "position click " + position, Toast.LENGTH_LONG).show();
+
+//          TODO show characteristics
+//            Intent intent = new Intent(getBaseContext(), DeviceCharacterActivy.class);
+//            if (mGattCharacteristics= null) {
+//                final BluetoothGattCharacteristic charaeristic =
+//                        mGattCharacteristics.get(groupPosition).get(chilosition);
+//                final int charaProp = characteristic.getPrerties();
+//                if ((charaProp | BluetoothGattCharacteristic.PROPERTY_RD) > 0) {
+//                    // If there is an active notification on a characteriic, clear
+//                    // it first so it doesn't update the data field on the usernterface.
+//                    if (mNotifyCharacteristic= null) {
+//                        mBluetoothLeService.setCharacteristicNofication(
+//                                mNotifyCharacterist, false);
+//                        mNotifyCharacterisc = null;
+//                  }
+//                    mBluetoothLeService.readCharacteristic(charaeristic);
+//              }
+//                if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTY) > 0) {
+//                    mNotifyCharacteristic = charteristic;
+//                    mBluetoothLeService.setCharacteristicNofication(
+//                            characterisc, true);
+//              }
 //            }
         }
     };

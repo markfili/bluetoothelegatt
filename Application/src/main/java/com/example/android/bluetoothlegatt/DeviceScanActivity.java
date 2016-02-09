@@ -92,12 +92,6 @@ public class DeviceScanActivity extends ListActivity {
         }
     }
 
-    public boolean isGPSEnabled(Context mContext) {
-        LocationManager locationManager = (LocationManager)
-                mContext.getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -145,10 +139,11 @@ public class DeviceScanActivity extends ListActivity {
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         setListAdapter(mLeDeviceListAdapter);
 
-        // TODO remove this TEST
+        /*  // TODO remove
+        // add regular Bluetooth paired devices to list as a TEST
         for (BluetoothDevice device : mBluetoothAdapter.getBondedDevices()) {
             mLeDeviceListAdapter.addDevice(device);
-        }
+        }*/
 
         scanLeDevice(true);
     }
