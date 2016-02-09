@@ -16,6 +16,7 @@
 
 package com.example.android.bluetoothlegatt;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ListActivity;
@@ -31,6 +32,8 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,6 +53,7 @@ import java.util.List;
  */
 public class DeviceScanActivity extends ListActivity {
     private static final String TAG = DeviceScanActivity.class.getSimpleName();
+    private static final int PERMISSION_REQUEST_CODE = 1001;
 
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
@@ -128,6 +132,8 @@ public class DeviceScanActivity extends ListActivity {
     protected void onResume() {
         super.onResume();
 
+        checkPermissions();
+
         // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
         // fire an intent to display a dialog asking the user to grant permission to enable it.
         if (!mBluetoothAdapter.isEnabled()) {
@@ -145,6 +151,39 @@ public class DeviceScanActivity extends ListActivity {
         }
 
         scanLeDevice(true);
+    }
+
+    private void checkPermissions() {
+        checkPermission(Manifest.permission.BLUETOOTH);
+        checkPermission(Manifest.permission.BLUETOOTH_ADMIN);
+        checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+        checkPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+    }
+
+    private void checkPermission(String permission) {
+        if (ContextCompat.checkSelfPermission(this,
+                permission)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{permission},
+                    PERMISSION_REQUEST_CODE);
+
+            // stop loading bluetooth if any of permissions isn't granted
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                startScanning();
+                break;
+            default:
+                // finish app if requested permissions are not allowed
+                Toast.makeText(this, "Permissions are required. Restart the app to try again.", Toast.LENGTH_LONG).show();
+                break;
+        }
     }
 
     @Override
