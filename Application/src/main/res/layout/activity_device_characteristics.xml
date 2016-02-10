@@ -10,4 +10,26 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ServiceCharacteristicsActivity">
 
+
+    <TextView
+        android:id="@+id/device_address_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/margin_small"
+        android:text="@string/label_device_address"/>
+
+    <TextView
+        android:id="@+id/device_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/device_address_label"
+        android:text="@string/no_data"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/characteristics_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/device_address_label"
+        android:layout_marginTop="@dimen/margin_small"/>
+
 </RelativeLayout>

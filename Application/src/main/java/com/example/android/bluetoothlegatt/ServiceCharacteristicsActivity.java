@@ -11,6 +11,8 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class ServiceCharacteristicsActivity extends Activity {
 
     private BluetoothLeService mBluetoothLeService;
 
+    private TextView mAddressView;
     private String mDeviceName;
     private String mDeviceAddress;
     private int mServiceId;
@@ -55,6 +58,7 @@ public class ServiceCharacteristicsActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
+            Log.i(TAG, "onReceive: " + action);
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
 //                mConnected = true;
 //                updateConnectionState(R.string.connected);
@@ -66,8 +70,9 @@ public class ServiceCharacteristicsActivity extends Activity {
 //                clearUI();
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 List<BluetoothGattService> supportedGattServices = mBluetoothLeService.getSupportedGattServices();
-                // TODO get service position from DeviceControlActivity via intent
+
                 // display service characteristics and fill service info header
+                Log.i(TAG, "onReceive: ACTION_GATT_SERVICES_DISCOVERED services count " + supportedGattServices.size());
                 displayGattCharacteristics(supportedGattServices.get(mServiceId));
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
 //                displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
@@ -144,7 +149,17 @@ public class ServiceCharacteristicsActivity extends Activity {
 
         Log.i(TAG, String.format("onCreate: Device name: %s, address: %s, service position: %d", mDeviceName, mDeviceAddress, mServiceId));
 
+
         setTitle(mDeviceName);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mAddressView = (TextView) findViewById(R.id.device_address);
+        mAddressView.setText(mDeviceAddress);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         // bind bluetooth le service
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
@@ -170,7 +185,18 @@ public class ServiceCharacteristicsActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         unbindService(mServiceConnection);
+//        mBluetoothLeService.close();
         mBluetoothLeService = null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

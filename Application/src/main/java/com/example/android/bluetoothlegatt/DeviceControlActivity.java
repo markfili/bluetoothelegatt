@@ -136,6 +136,7 @@ public class DeviceControlActivity extends Activity {
             intent.putExtra(EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
             intent.putExtra(EXTRAS_SERVICE_POSITION, mServicePosition);
 
+            mBluetoothLeService.close();
             startActivity(intent);
         }
     };
@@ -163,7 +164,11 @@ public class DeviceControlActivity extends Activity {
 
         getActionBar().setTitle(mDeviceName);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         // bind bluetooth le service
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
@@ -189,6 +194,7 @@ public class DeviceControlActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         unbindService(mServiceConnection);
+        mBluetoothLeService.close();
         mBluetoothLeService = null;
     }
 
