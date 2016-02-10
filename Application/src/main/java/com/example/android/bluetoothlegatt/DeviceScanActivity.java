@@ -138,11 +138,11 @@ public class DeviceScanActivity extends ListActivity {
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         setListAdapter(mLeDeviceListAdapter);
 
-          // TODO remove
+        // TODO remove
         // add regular Bluetooth paired devices to list as a TEST
-        for (BluetoothDevice device : mBluetoothAdapter.getBondedDevices()) {
-            mLeDeviceListAdapter.addDevice(device);
-        }
+        // for (BluetoothDevice device : mBluetoothAdapter.getBondedDevices()) {
+        //    mLeDeviceListAdapter.addDevice(device);
+        // }
 
         scanLeDevice(true);
     }
