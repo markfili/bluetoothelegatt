@@ -1,6 +1,7 @@
 package com.example.android.bluetoothlegatt;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -10,8 +11,11 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
@@ -22,10 +26,19 @@ public class ServiceCharacteristicsActivity extends Activity {
 
     private BluetoothLeService mBluetoothLeService;
 
+    private RecyclerView recyclerView;
     private TextView mAddressView;
+    private TextView mServiceType;
+    private TextView mServiceUUID;
+    private TextView mServiceInstID;
+
+
     private String mDeviceName;
     private String mDeviceAddress;
     private int mServiceId;
+
+    private final String LIST_NAME = "NAME";
+    private final String LIST_UUID = "UUID";
 
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -71,8 +84,9 @@ public class ServiceCharacteristicsActivity extends Activity {
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 List<BluetoothGattService> supportedGattServices = mBluetoothLeService.getSupportedGattServices();
 
-                // display service characteristics and fill service info header
                 Log.i(TAG, "onReceive: ACTION_GATT_SERVICES_DISCOVERED services count " + supportedGattServices.size());
+
+                // display service characteristics and fill service info header
                 displayGattCharacteristics(supportedGattServices.get(mServiceId));
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
 //                displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
@@ -80,37 +94,37 @@ public class ServiceCharacteristicsActivity extends Activity {
         }
     };
 
-    private void displayGattCharacteristics(BluetoothGattService service) {
+    private void displayGattCharacteristics(BluetoothGattService gattService) {
 
-        // TODO fill info header with service info and listview with characteristics
+        // fill info header with service info
+        mServiceUUID.setText(gattService.getUuid().toString());
+        mServiceType.setText("" + gattService.getType());
+        mServiceInstID.setText("" + gattService.getInstanceId());
+
+
+        // TODO filllistview with characteristics
+
 //        EXTRACTING CHARACTERISTICS
 //        PART 1
 //        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData
 //                = new ArrayList<>();
 //        mGattCharacteristics = new ArrayList<>();
-//
-//        String unknownCharaString = getResources().getString(R.string.unknown_characteristic);
+
+        // used during development
+        String unknownCharaString = getResources().getString(R.string.unknown_characteristic);
 //
 //        ArrayList<HashMap<String, String>> gattCharacteristicGroupData =
 //                new ArrayList<>();
 //
-//        // get characteristics from service
-//        List<BluetoothGattCharacteristic> gattCharacteristics =
-//                gattService.getCharacteristics();
-//
-//        ArrayList<BluetoothGattCharacteristic> charas =
-//                new ArrayList<>();
-//
-//        // Loops through available Characteristics.
-//        for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
-//            charas.add(gattCharacteristic);
+        // get characteristics from service - gattService.getCharacteristics();
+
+        // Loops through available Characteristics.
 //            HashMap<String, String> currentCharaData = new HashMap<>();
-//            uuid = gattCharacteristic.getUuid().toString();
+//            charUUID = gattCharacteristic.getUuid().toString();
 //            currentCharaData.put(
-//                    LIST_NAME, SampleGattAttributes.lookup(uuid, unknownCharaString));
+//                    LIST_NAME, SampleGattAttributes.lookup(charUUID, unknownCharaString));
 //            currentCharaData.put(LIST_UUID, uuid);
 //            gattCharacteristicGroupData.add(currentCharaData);
-//        }
 //        mGattCharacteristics.add(charas);
 //        gattCharacteristicData.add(gattCharacteristicGroupData);
 //
@@ -135,13 +149,14 @@ public class ServiceCharacteristicsActivity extends Activity {
 //                        characterisc, true);
 //            }
 //        }
+        recyclerView.setAdapter(new CharacteristicRecyclerAdapter(gattService.getCharacteristics()));
 
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_device_characteristics);
+        setContentView(R.layout.gatt_characteristics);
 
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME);
@@ -150,12 +165,18 @@ public class ServiceCharacteristicsActivity extends Activity {
 
         Log.i(TAG, String.format("onCreate: Device name: %s, address: %s, service position: %d", mDeviceName, mDeviceAddress, mServiceId));
 
+        mAddressView = (TextView) findViewById(R.id.device_address);
+        mServiceUUID = (TextView) findViewById(R.id.service_uuid);
+        mServiceType = (TextView) findViewById(R.id.service_type);
+        mServiceInstID = (TextView) findViewById(R.id.service_id);
+
+        mAddressView.setText(mDeviceAddress);
+
+        recyclerView = (RecyclerView) findViewById(R.id.characteristics_recyclerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         setTitle(mDeviceName);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mAddressView = (TextView) findViewById(R.id.device_address);
-        mAddressView.setText(mDeviceAddress);
     }
 
     @Override
@@ -209,5 +230,29 @@ public class ServiceCharacteristicsActivity extends Activity {
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
         return intentFilter;
+    }
+
+    private class CharacteristicRecyclerAdapter extends RecyclerView.Adapter {
+
+        private List<BluetoothGattCharacteristic> characteristics;
+
+        public CharacteristicRecyclerAdapter(List<BluetoothGattCharacteristic> characteristics) {
+            this.characteristics = characteristics;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return null;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return characteristics.size();
+        }
     }
 }

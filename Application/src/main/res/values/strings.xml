@@ -33,4 +33,8 @@
     <string name="menu_disconnect">Disconnect</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
+    <string name="label_uuid">UUID:</string>
+    <string name="label_instance_id">Instance id:</string>
+    <string name="label_service_type">Type:</string>
+    <string name="label_service_data">Service data</string>
 </resources>
