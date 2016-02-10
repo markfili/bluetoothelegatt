@@ -81,6 +81,7 @@ public class ServiceCharacteristicsActivity extends Activity {
     };
 
     private void displayGattCharacteristics(BluetoothGattService service) {
+
         // TODO fill info header with service info and listview with characteristics
 //        EXTRACTING CHARACTERISTICS
 //        PART 1
@@ -179,13 +180,14 @@ public class ServiceCharacteristicsActivity extends Activity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mGattUpdateReceiver);
+        mBluetoothLeService.close();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mBluetoothLeService.close();
         unbindService(mServiceConnection);
-//        mBluetoothLeService.close();
         mBluetoothLeService = null;
     }
 
