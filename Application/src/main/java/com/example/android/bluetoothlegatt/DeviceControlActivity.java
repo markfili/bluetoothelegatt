@@ -128,8 +128,8 @@ public class DeviceControlActivity extends Activity {
         public void onItemClick(AdapterView<?> parent, View view, int mServicePosition, long id) {
             Toast.makeText(getBaseContext(), "position click " + mServicePosition, Toast.LENGTH_LONG).show();
 
-            // show list of characteristics in DeviceCharacteristicsActivity
-            Intent intent = new Intent(getBaseContext(), DeviceCharacteristicsActivity.class);
+            // show list of characteristics in ServiceCharacteristicsActivity
+            Intent intent = new Intent(getBaseContext(), ServiceCharacteristicsActivity.class);
 
             // TODO send intent with required data - mDeviceName and mDeviceAddress
             intent.putExtra(EXTRAS_DEVICE_NAME, mDeviceName);

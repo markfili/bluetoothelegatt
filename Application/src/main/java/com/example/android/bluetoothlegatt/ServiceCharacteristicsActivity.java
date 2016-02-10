@@ -14,9 +14,9 @@ import android.util.Log;
 
 import java.util.List;
 
-public class DeviceCharacteristicsActivity extends Activity {
+public class ServiceCharacteristicsActivity extends Activity {
 
-    private static final String TAG = DeviceCharacteristicsActivity.class.getSimpleName();
+    private static final String TAG = ServiceCharacteristicsActivity.class.getSimpleName();
 
     private BluetoothLeService mBluetoothLeService;
 
@@ -144,6 +144,7 @@ public class DeviceCharacteristicsActivity extends Activity {
 
         Log.i(TAG, String.format("onCreate: Device name: %s, address: %s, service position: %d", mDeviceName, mDeviceAddress, mServiceId));
 
+        setTitle(mDeviceName);
         // bind bluetooth le service
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
