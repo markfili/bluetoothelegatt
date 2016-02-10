@@ -28,7 +28,6 @@ import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -139,11 +138,11 @@ public class DeviceScanActivity extends ListActivity {
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         setListAdapter(mLeDeviceListAdapter);
 
-        /*  // TODO remove
+          // TODO remove
         // add regular Bluetooth paired devices to list as a TEST
         for (BluetoothDevice device : mBluetoothAdapter.getBondedDevices()) {
             mLeDeviceListAdapter.addDevice(device);
-        }*/
+        }
 
         scanLeDevice(true);
     }
@@ -232,11 +231,22 @@ public class DeviceScanActivity extends ListActivity {
 
     private void startScanning() {
         mScanning = true;
+        Log.i(TAG, "stopScanning: build version " + Build.VERSION.SDK_INT);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
             initScanCallback();
             mBluetoothAdapter.getBluetoothLeScanner().startScan(scanCallback);
+        }
+    }
+
+    private void stopScanning() {
+        mScanning = false;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+        } else {
+            initScanCallback();
+            mBluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
         }
     }
 
@@ -273,16 +283,6 @@ public class DeviceScanActivity extends ListActivity {
                     Log.i(TAG, "onScanFailed: errorCode " + errorCode);
                 }
             };
-        }
-    }
-
-    private void stopScanning() {
-        mScanning = false;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-        } else {
-            initScanCallback();
-            mBluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
         }
     }
 
