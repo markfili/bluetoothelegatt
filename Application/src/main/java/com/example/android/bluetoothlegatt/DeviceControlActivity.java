@@ -17,7 +17,6 @@
 package com.example.android.bluetoothlegatt;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -119,7 +118,7 @@ public class DeviceControlActivity extends Activity {
     // http://d.android.com/reference/android/bluetooth/BluetoothGatt.html for the complete
     // list of supported characteristic features.
 
-    AdapterView.OnItemClickListener servicesListClickListner = new AdapterView.OnItemClickListener() {
+    AdapterView.OnItemClickListener servicesListClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int mServicePosition, long id) {
 
@@ -153,7 +152,7 @@ public class DeviceControlActivity extends Activity {
         // Sets up UI references.
         ((TextView) findViewById(R.id.device_address)).setText(mDeviceAddress);
         mGattServicesList = (ListView) findViewById(R.id.gatt_services_list);
-        mGattServicesList.setOnItemClickListener(servicesListClickListner);
+        mGattServicesList.setOnItemClickListener(servicesListClickListener);
         mConnectionState = (TextView) findViewById(R.id.connection_state);
         mDataField = (TextView) findViewById(R.id.data_value);
 
@@ -173,7 +172,7 @@ public class DeviceControlActivity extends Activity {
     protected void onResume() {
         super.onResume();
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        if (mBluetoothLeService != null) {
+        if (mBluetoothLeService != null && mBluetoothLeService.checkBTState(this)) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
         }
@@ -210,7 +209,9 @@ public class DeviceControlActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_connect:
-                mBluetoothLeService.connect(mDeviceAddress);
+                if (mBluetoothLeService.checkBTState(this)) {
+                    mBluetoothLeService.connect(mDeviceAddress);
+                }
                 return true;
             case R.id.menu_disconnect:
                 mBluetoothLeService.disconnect();

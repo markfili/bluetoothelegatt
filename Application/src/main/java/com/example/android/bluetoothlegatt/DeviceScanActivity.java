@@ -233,6 +233,11 @@ public class DeviceScanActivity extends ListActivity {
                 public void run() {
                     stopScanning();
                     invalidateOptionsMenu();
+                    // TODO TEST
+                    for (BluetoothDevice device : mBluetoothAdapter.getBondedDevices()) {
+                        mLeDeviceListAdapter.addDevice(device);
+                        mLeDeviceListAdapter.notifyDataSetChanged();
+                    }
                 }
             }, SCAN_PERIOD);
 

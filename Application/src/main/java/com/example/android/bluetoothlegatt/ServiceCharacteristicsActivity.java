@@ -190,7 +190,7 @@ public class ServiceCharacteristicsActivity extends Activity {
     protected void onResume() {
         super.onResume();
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        if (mBluetoothLeService != null) {
+        if (mBluetoothLeService != null && mBluetoothLeService.checkBTState(this)) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
         }
