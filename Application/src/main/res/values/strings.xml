@@ -37,4 +37,6 @@
     <string name="label_instance_id">Instance id:</string>
     <string name="label_service_type">Type:</string>
     <string name="label_service_data">Service data</string>
+    <string name="bt_needed">Bluetooth needed to use the app.</string>
+    <string name="permissions_required">Permissions are required to run Bluetooth discovery. Restart the app to try again.</string>
 </resources>
