@@ -32,7 +32,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.List;
 import java.util.UUID;
@@ -318,9 +317,10 @@ public class BluetoothLeService extends Service {
     }
 
     public boolean checkBTState(Activity context) {
+        int state = mBluetoothAdapter.getState();
         boolean bluetoothAvailable = mBluetoothAdapter.isEnabled();
 
-        if (!mBluetoothAdapter.isEnabled() || mBluetoothAdapter.getState() != BluetoothAdapter.STATE_ON) {
+        if (!bluetoothAvailable || state != BluetoothAdapter.STATE_ON) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             context.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
