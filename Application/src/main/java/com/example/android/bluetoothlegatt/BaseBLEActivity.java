@@ -25,7 +25,8 @@ public abstract class BaseBLEActivity extends Activity {
 
     protected String mDeviceName;
     protected String mDeviceAddress;
-    protected int mServiceId;
+    protected int mServicePosition;
+    private boolean debug = false;
 
     @Override
     protected void onStart() {
@@ -78,11 +79,11 @@ public abstract class BaseBLEActivity extends Activity {
             final String action = intent.getAction();
             Log.i(TAG, "onReceive: " + action);
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-                Toast.makeText(BaseBLEActivity.this, "Connected to " + mDeviceName, Toast.LENGTH_LONG).show();
+                showDebugToast("Connected to " + mDeviceName);
                 Log.i(TAG, "onReceive: Connected to " + mDeviceName);
                 gattConnected();
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
-                Toast.makeText(BaseBLEActivity.this, "Disconnected from " + mDeviceName, Toast.LENGTH_LONG).show();
+                showDebugToast("Disconnected from " + mDeviceName);
                 Log.i(TAG, "onReceive: Disconnected from " + mDeviceName);
                 gattDisconnected();
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
@@ -90,12 +91,16 @@ public abstract class BaseBLEActivity extends Activity {
                 gattServicesDiscovered(supportedGattServices);
                 Log.i(TAG, "onReceive: ACTION_GATT_SERVICES_DISCOVERED services count " + supportedGattServices.size());
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                Toast.makeText(BaseBLEActivity.this, "Data available from " + mDeviceName, Toast.LENGTH_LONG).show();
+                showDebugToast("Data available from " + mDeviceName);
                 Log.i(TAG, "onReceive: Data available from " + mDeviceName);
                 gattDataAvailable(intent);
             }
         }
     };
+
+    private void showDebugToast(String text) {
+        if (debug) Toast.makeText(BaseBLEActivity.this, text, Toast.LENGTH_LONG).show();
+    }
 
     protected void showHome() {
         if (getActionBar() != null) {
@@ -126,8 +131,8 @@ public abstract class BaseBLEActivity extends Activity {
         this.mDeviceAddress = mDeviceAddress;
     }
 
-    public void setmServiceId(int mServiceId) {
-        this.mServiceId = mServiceId;
+    public void setmServicePosition(int mServicePosition) {
+        this.mServicePosition = mServicePosition;
     }
 
 

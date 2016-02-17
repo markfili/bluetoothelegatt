@@ -25,6 +25,7 @@ public class ServiceActivity extends BaseBLEActivity {
     public static final String EXTRAS_SERVICE_TYPE = "EXTRAS_SERVICE_TYPE";
     public static final String EXTRAS_SERVICE_UUID = "EXTRAS_SERVICE_UUID";
     public static final String EXTRAS_SERVICE_ID = "EXTRAS_SERVICE_ID";
+    public static final String EXTRAS_CHARACTERISTIC_UUID = "EXTRAS_CHARACTERISTIC_UUID";
 
     @Bind(R.id.device_address)
     TextView mAddressView;
@@ -50,8 +51,8 @@ public class ServiceActivity extends BaseBLEActivity {
             Intent intent = new Intent(ServiceActivity.this, CharacteristicActivity.class);
             intent.putExtra(DeviceActivity.EXTRAS_DEVICE_NAME, mDeviceName);
             intent.putExtra(DeviceActivity.EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
-            intent.putExtra(DeviceActivity.EXTRAS_SERVICE_POSITION, position);
 
+            intent.putExtra(ServiceActivity.EXTRAS_CHARACTERISTIC_UUID, mBluetoothGattService.getCharacteristics().get(position).getUuid().toString());
             intent.putExtra(ServiceActivity.EXTRAS_SERVICE_TYPE, mServiceType);
             intent.putExtra(ServiceActivity.EXTRAS_SERVICE_UUID, mServiceUUID);
             intent.putExtra(ServiceActivity.EXTRAS_SERVICE_ID, mServiceInstanceID);
@@ -59,6 +60,7 @@ public class ServiceActivity extends BaseBLEActivity {
             startActivity(intent);
         }
     };
+    private BluetoothGattService mBluetoothGattService;
 
 
     @Override
@@ -74,18 +76,18 @@ public class ServiceActivity extends BaseBLEActivity {
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(DeviceActivity.EXTRAS_DEVICE_NAME);
         mDeviceAddress = intent.getStringExtra(DeviceActivity.EXTRAS_DEVICE_ADDRESS);
-        mServiceId = intent.getIntExtra(DeviceActivity.EXTRAS_SERVICE_POSITION, 0);
+        mServicePosition = intent.getIntExtra(DeviceActivity.EXTRAS_SERVICE_POSITION, 0);
 
         setmDeviceName(mDeviceName);
         setmDeviceAddress(mDeviceAddress);
-        setmServiceId(mServiceId);
+        setmServicePosition(mServicePosition);
 
         mAddressView.setText(mDeviceAddress);
 
         setTitle(mDeviceName);
         showHome();
 
-        Log.i(TAG, String.format("onCreate: Device name: %s, address: %s, service position: %d", mDeviceName, mDeviceAddress, mServiceId));
+        Log.i(TAG, String.format("onCreate: Device name: %s, address: %s, service position: %d", mDeviceName, mDeviceAddress, mServicePosition));
     }
 
     protected void displayGattCharacteristics(BluetoothGattService gattService) {
@@ -148,7 +150,8 @@ public class ServiceActivity extends BaseBLEActivity {
 
     @Override
     protected void gattServicesDiscovered(List<BluetoothGattService> supportedGattServices) {
-        displayGattCharacteristics(supportedGattServices.get(mServiceId));
+        mBluetoothGattService = supportedGattServices.get(mServicePosition);
+        displayGattCharacteristics(mBluetoothGattService);
     }
 
     @Override
