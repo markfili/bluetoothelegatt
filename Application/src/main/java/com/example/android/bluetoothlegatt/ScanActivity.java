@@ -240,7 +240,7 @@ public class ScanActivity extends ListActivity {
                         mLeDeviceListAdapter.notifyDataSetChanged();
                     }
                 }
-            }, SCAN_PERIOD);
+            }, BaseBLEActivity.DEBUG ? BaseBLEActivity.SCAN_PERIOD : SCAN_PERIOD);
 
             mScanning = true;
 

@@ -57,6 +57,7 @@ public class ServiceActivity extends BaseBLEActivity {
             intent.putExtra(ServiceActivity.EXTRAS_SERVICE_UUID, mServiceUUID);
             intent.putExtra(ServiceActivity.EXTRAS_SERVICE_ID, mServiceInstanceID);
 
+            mBluetoothLeService.close();
             startActivity(intent);
         }
     };

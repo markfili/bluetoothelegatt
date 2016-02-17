@@ -99,7 +99,7 @@ public class CharacteristicActivity extends BaseBLEActivity {
 
     private void displayCharacteristicData(BluetoothGattCharacteristic characteristic) {
         // TODO
-        Toast.makeText(this, "Got value from characteristic: " + characteristic.getValue()[0], Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Got value from characteristic: " + characteristic.getValue().length, Toast.LENGTH_LONG).show();
     }
 
     @Override

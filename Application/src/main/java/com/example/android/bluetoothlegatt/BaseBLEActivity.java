@@ -21,12 +21,13 @@ import java.util.List;
 public abstract class BaseBLEActivity extends Activity {
 
     private static final String TAG = BaseBLEActivity.class.getSimpleName();
-    protected BluetoothLeService mBluetoothLeService;
+    public static final long SCAN_PERIOD = 10;
+    public static boolean DEBUG = true;
 
+    protected BluetoothLeService mBluetoothLeService;
     protected String mDeviceName;
     protected String mDeviceAddress;
     protected int mServicePosition;
-    private boolean debug = false;
 
     @Override
     protected void onStart() {
@@ -99,7 +100,7 @@ public abstract class BaseBLEActivity extends Activity {
     };
 
     private void showDebugToast(String text) {
-        if (debug) Toast.makeText(BaseBLEActivity.this, text, Toast.LENGTH_LONG).show();
+        if (DEBUG) Toast.makeText(BaseBLEActivity.this, text, Toast.LENGTH_LONG).show();
     }
 
     protected void showHome() {
