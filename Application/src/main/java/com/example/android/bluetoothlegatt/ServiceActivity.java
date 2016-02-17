@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -20,20 +22,44 @@ import butterknife.ButterKnife;
 public class ServiceActivity extends BaseBLEActivity {
 
     private static final String TAG = ServiceActivity.class.getSimpleName();
+    public static final String EXTRAS_SERVICE_TYPE = "EXTRAS_SERVICE_TYPE";
+    public static final String EXTRAS_SERVICE_UUID = "EXTRAS_SERVICE_UUID";
+    public static final String EXTRAS_SERVICE_ID = "EXTRAS_SERVICE_ID";
 
     @Bind(R.id.device_address)
     TextView mAddressView;
     @Bind(R.id.service_type)
-    TextView mServiceType;
+    TextView mServiceTypeView;
     @Bind(R.id.service_uuid)
-    TextView mServiceUUID;
+    TextView mServiceUUIDView;
     @Bind(R.id.service_id)
-    TextView mServiceInstID;
+    TextView mServiceInstanceIDView;
     @Bind(R.id.characteristics_listview)
-    ListView mGattCharacteristicsList;
+    ListView mGattCharacteristicsListView;
 
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
+
+    private int mServiceType;
+    private String mServiceUUID;
+    private int mServiceInstanceID;
+
+    private AdapterView.OnItemClickListener onCharacteristicClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent = new Intent(ServiceActivity.this, CharacteristicActivity.class);
+            intent.putExtra(DeviceActivity.EXTRAS_DEVICE_NAME, mDeviceName);
+            intent.putExtra(DeviceActivity.EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
+            intent.putExtra(DeviceActivity.EXTRAS_SERVICE_POSITION, position);
+
+            intent.putExtra(ServiceActivity.EXTRAS_SERVICE_TYPE, mServiceType);
+            intent.putExtra(ServiceActivity.EXTRAS_SERVICE_UUID, mServiceUUID);
+            intent.putExtra(ServiceActivity.EXTRAS_SERVICE_ID, mServiceInstanceID);
+
+            startActivity(intent);
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +67,10 @@ public class ServiceActivity extends BaseBLEActivity {
         setContentView(R.layout.gatt_characteristics);
         ButterKnife.bind(this);
 
+        getIntentData();
+    }
+
+    private void getIntentData() {
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(DeviceActivity.EXTRAS_DEVICE_NAME);
         mDeviceAddress = intent.getStringExtra(DeviceActivity.EXTRAS_DEVICE_ADDRESS);
@@ -50,21 +80,22 @@ public class ServiceActivity extends BaseBLEActivity {
         setmDeviceAddress(mDeviceAddress);
         setmServiceId(mServiceId);
 
-        Log.i(TAG, String.format("onCreate: Device name: %s, address: %s, service position: %d", mDeviceName, mDeviceAddress, mServiceId));
-
         mAddressView.setText(mDeviceAddress);
-        setTitle(mDeviceName);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle(mDeviceName);
+        showHome();
+
+        Log.i(TAG, String.format("onCreate: Device name: %s, address: %s, service position: %d", mDeviceName, mDeviceAddress, mServiceId));
     }
 
     protected void displayGattCharacteristics(BluetoothGattService gattService) {
-
+        mServiceUUID = gattService.getUuid().toString();
+        mServiceType = gattService.getType();
+        mServiceInstanceID = gattService.getInstanceId();
         // fill info header with service info
-        mServiceUUID.setText(gattService.getUuid().toString());
-        mServiceType.setText(gattService.getType() == BluetoothGattService.SERVICE_TYPE_PRIMARY ? "Primary" : "Secondary");
-
-        mServiceInstID.setText("" + gattService.getInstanceId());
+        mServiceUUIDView.setText(mServiceUUID);
+        mServiceTypeView.setText(mServiceType == BluetoothGattService.SERVICE_TYPE_PRIMARY ? getString(R.string.primary) : getString(R.string.secondary));
+        mServiceInstanceIDView.setText(String.format("%d", mServiceInstanceID));
 
         // dummy text for item title
         String unknownCharaString = getResources().getString(R.string.unknown_characteristic);
@@ -95,7 +126,8 @@ public class ServiceActivity extends BaseBLEActivity {
                 new int[]{android.R.id.text1, android.R.id.text2}
         );
 
-        mGattCharacteristicsList.setAdapter(gattServiceAdapter);
+        mGattCharacteristicsListView.setAdapter(gattServiceAdapter);
+        mGattCharacteristicsListView.setOnItemClickListener(onCharacteristicClickListener);
 
     }
 

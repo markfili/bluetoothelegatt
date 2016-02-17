@@ -41,4 +41,6 @@
     <string name="permissions_required">Permissions are required to run Bluetooth discovery. Restart the app to try again.</string>
     <string name="label_characteristic_data">Characteristic data</string>
     <string name="label_device_data">Device data</string>
+    <string name="primary">Primary</string>
+    <string name="secondary">Secondary</string>
 </resources>

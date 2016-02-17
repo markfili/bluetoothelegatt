@@ -51,6 +51,7 @@ import java.util.List;
  * Activity for scanning and displaying available Bluetooth LE devices.
  */
 public class ScanActivity extends ListActivity {
+
     private static final String TAG = ScanActivity.class.getSimpleName();
     private static final int PERMISSION_REQUEST_CODE = 1001;
     private static final int REQUEST_START_SCAN = 1;

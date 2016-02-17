@@ -97,6 +97,12 @@ public abstract class BaseBLEActivity extends Activity {
         }
     };
 
+    protected void showHome() {
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
     protected abstract void gattDataAvailable(Intent intent);
 
     protected abstract void gattServicesDiscovered(List<BluetoothGattService> supportedGattServices);

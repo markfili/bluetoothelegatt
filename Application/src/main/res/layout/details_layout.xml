@@ -1,8 +1,8 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
 
 
         <TextView
@@ -89,30 +89,37 @@
             android:layout_toRightOf="@id/label_service_id"
             android:text="@string/no_data"/>
 
-        <TextView
-            android:id="@+id/title_characteristic_data"
-            style="@style/data_title_style"
+        <RelativeLayout
+            android:id="@+id/layout_characteristic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/service_id"
-            android:text="@string/label_characteristic_data"/>
+            android:visibility="gone"
+            android:layout_below="@id/service_id">
+
+            <TextView
+                android:id="@+id/title_characteristic_data"
+                style="@style/data_title_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_characteristic_data"/>
 
 
-        <TextView
-            android:id="@+id/characteristic_uuid_label"
-            style="@style/data_label_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/title_characteristic_data"
-            android:text="@string/label_uuid"/>
+            <TextView
+                android:id="@+id/label_characteristic_uuid"
+                style="@style/data_label_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_characteristic_data"
+                android:text="@string/label_uuid"/>
 
-        <TextView
-            android:id="@+id/characteristic_uuid"
-            style="@style/data_value_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/title_characteristic_data"
-            android:layout_toRightOf="@id/characteristic_uuid_label"
-            android:text="@string/no_data"/>
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/characteristic_uuid"
+                style="@style/data_value_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_characteristic_data"
+                android:layout_toRightOf="@id/label_characteristic_uuid"
+                android:text="@string/no_data"/>
+        </RelativeLayout>
+    <!--</RelativeLayout>-->
 </merge>
