@@ -159,9 +159,9 @@ public class ServiceCharacteristicsActivity extends Activity {
         setContentView(R.layout.gatt_characteristics);
 
         final Intent intent = getIntent();
-        mDeviceName = intent.getStringExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME);
-        mDeviceAddress = intent.getStringExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS);
-        mServiceId = intent.getIntExtra(DeviceControlActivity.EXTRAS_SERVICE_POSITION, 0);
+        mDeviceName = intent.getStringExtra(DeviceServicesActivity.EXTRAS_DEVICE_NAME);
+        mDeviceAddress = intent.getStringExtra(DeviceServicesActivity.EXTRAS_DEVICE_ADDRESS);
+        mServiceId = intent.getIntExtra(DeviceServicesActivity.EXTRAS_SERVICE_POSITION, 0);
 
         Log.i(TAG, String.format("onCreate: Device name: %s, address: %s, service position: %d", mDeviceName, mDeviceAddress, mServiceId));
 
