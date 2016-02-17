@@ -37,8 +37,8 @@ import java.util.List;
  * communicates with {@code BluetoothLeService}, which in turn interacts with the
  * Bluetooth LE API.
  */
-public class DeviceServicesActivity extends BaseDeviceActivity {
-    private final static String TAG = DeviceServicesActivity.class.getSimpleName();
+public class DeviceActivity extends BaseBLEActivity {
+    private final static String TAG = DeviceActivity.class.getSimpleName();
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
@@ -58,8 +58,8 @@ public class DeviceServicesActivity extends BaseDeviceActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int mServicePosition, long id) {
 
-            // show list of characteristics in ServiceCharacteristicsActivity
-            Intent intent = new Intent(getBaseContext(), ServiceCharacteristicsActivity.class);
+            // show list of characteristics in ServiceActivity
+            Intent intent = new Intent(getBaseContext(), ServiceActivity.class);
 
             // send intent with required data
             intent.putExtra(EXTRAS_DEVICE_NAME, mDeviceName);

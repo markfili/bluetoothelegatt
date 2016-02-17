@@ -42,7 +42,7 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo.Light">
         <activity
-            android:name=".DeviceScanActivity"
+            android:name=".ScanActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -50,14 +50,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".DeviceServicesActivity"/>
+        <activity android:name=".DeviceActivity"/>
 
         <service
             android:name=".BluetoothLeService"
             android:enabled="true"/>
 
-        <activity android:name=".ServiceCharacteristicsActivity"/>
-        <activity android:name=".CharacteristicDetailsActivity">
+        <activity android:name=".ServiceActivity"/>
+        <activity android:name=".CharacteristicActivity">
         </activity>
     </application>
 

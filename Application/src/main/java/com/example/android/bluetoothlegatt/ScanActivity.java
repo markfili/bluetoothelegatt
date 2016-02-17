@@ -50,8 +50,8 @@ import java.util.List;
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
  */
-public class DeviceScanActivity extends ListActivity {
-    private static final String TAG = DeviceScanActivity.class.getSimpleName();
+public class ScanActivity extends ListActivity {
+    private static final String TAG = ScanActivity.class.getSimpleName();
     private static final int PERMISSION_REQUEST_CODE = 1001;
     private static final int REQUEST_START_SCAN = 1;
     // Stops scanning after 10 seconds.
@@ -207,9 +207,9 @@ public class DeviceScanActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
         if (device == null) return;
-        final Intent intent = new Intent(this, DeviceServicesActivity.class);
-        intent.putExtra(DeviceServicesActivity.EXTRAS_DEVICE_NAME, device.getName());
-        intent.putExtra(DeviceServicesActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+        final Intent intent = new Intent(this, DeviceActivity.class);
+        intent.putExtra(DeviceActivity.EXTRAS_DEVICE_NAME, device.getName());
+        intent.putExtra(DeviceActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
         if (mScanning) {
             stopScanning();
         }
@@ -308,7 +308,7 @@ public class DeviceScanActivity extends ListActivity {
         public LeDeviceListAdapter() {
             super();
             mLeDevices = new ArrayList<>();
-            mInflator = DeviceScanActivity.this.getLayoutInflater();
+            mInflator = ScanActivity.this.getLayoutInflater();
         }
 
         public void addDevice(BluetoothDevice device) {

@@ -1,11 +1,9 @@
 package com.example.android.bluetoothlegatt;
 
-import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -19,9 +17,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ServiceCharacteristicsActivity extends BaseDeviceActivity {
+public class ServiceActivity extends BaseBLEActivity {
 
-    private static final String TAG = ServiceCharacteristicsActivity.class.getSimpleName();
+    private static final String TAG = ServiceActivity.class.getSimpleName();
 
     @Bind(R.id.device_address)
     TextView mAddressView;
@@ -44,9 +42,9 @@ public class ServiceCharacteristicsActivity extends BaseDeviceActivity {
         ButterKnife.bind(this);
 
         final Intent intent = getIntent();
-        mDeviceName = intent.getStringExtra(DeviceServicesActivity.EXTRAS_DEVICE_NAME);
-        mDeviceAddress = intent.getStringExtra(DeviceServicesActivity.EXTRAS_DEVICE_ADDRESS);
-        mServiceId = intent.getIntExtra(DeviceServicesActivity.EXTRAS_SERVICE_POSITION, 0);
+        mDeviceName = intent.getStringExtra(DeviceActivity.EXTRAS_DEVICE_NAME);
+        mDeviceAddress = intent.getStringExtra(DeviceActivity.EXTRAS_DEVICE_ADDRESS);
+        mServiceId = intent.getIntExtra(DeviceActivity.EXTRAS_SERVICE_POSITION, 0);
 
         setmDeviceName(mDeviceName);
         setmDeviceAddress(mDeviceAddress);

@@ -18,9 +18,9 @@ import java.util.List;
  * Base Activity class with methods used to handle connections to a Bluetooth device.
  * Created by marko on 2/17/16.
  */
-public abstract class BaseDeviceActivity extends Activity {
+public abstract class BaseBLEActivity extends Activity {
 
-    private static final String TAG = BaseDeviceActivity.class.getSimpleName();
+    private static final String TAG = BaseBLEActivity.class.getSimpleName();
     protected BluetoothLeService mBluetoothLeService;
 
     protected String mDeviceName;
@@ -78,11 +78,11 @@ public abstract class BaseDeviceActivity extends Activity {
             final String action = intent.getAction();
             Log.i(TAG, "onReceive: " + action);
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-                Toast.makeText(BaseDeviceActivity.this, "Connected to " + mDeviceName, Toast.LENGTH_LONG).show();
+                Toast.makeText(BaseBLEActivity.this, "Connected to " + mDeviceName, Toast.LENGTH_LONG).show();
                 Log.i(TAG, "onReceive: Connected to " + mDeviceName);
                 gattConnected();
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
-                Toast.makeText(BaseDeviceActivity.this, "Disconnected from " + mDeviceName, Toast.LENGTH_LONG).show();
+                Toast.makeText(BaseBLEActivity.this, "Disconnected from " + mDeviceName, Toast.LENGTH_LONG).show();
                 Log.i(TAG, "onReceive: Disconnected from " + mDeviceName);
                 gattDisconnected();
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
@@ -90,7 +90,7 @@ public abstract class BaseDeviceActivity extends Activity {
                 gattServicesDiscovered(supportedGattServices);
                 Log.i(TAG, "onReceive: ACTION_GATT_SERVICES_DISCOVERED services count " + supportedGattServices.size());
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                Toast.makeText(BaseDeviceActivity.this, "Data available from " + mDeviceName, Toast.LENGTH_LONG).show();
+                Toast.makeText(BaseBLEActivity.this, "Data available from " + mDeviceName, Toast.LENGTH_LONG).show();
                 Log.i(TAG, "onReceive: Data available from " + mDeviceName);
                 gattDataAvailable(intent);
             }
