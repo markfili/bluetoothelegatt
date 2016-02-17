@@ -66,6 +66,7 @@ public class DeviceServicesActivity extends BaseDeviceActivity {
             intent.putExtra(EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
             intent.putExtra(EXTRAS_SERVICE_POSITION, mServicePosition);
 
+            mBluetoothLeService.close();
             startActivity(intent);
         }
     };
@@ -115,9 +116,7 @@ public class DeviceServicesActivity extends BaseDeviceActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_connect:
-                if (mBluetoothLeService.checkBTState(this)) {
-                    mBluetoothLeService.connect(mDeviceAddress);
-                }
+                reconnectToDevice();
                 return true;
             case R.id.menu_disconnect:
                 mBluetoothLeService.disconnect();

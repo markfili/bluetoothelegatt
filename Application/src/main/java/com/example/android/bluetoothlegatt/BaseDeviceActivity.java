@@ -15,6 +15,7 @@ import android.widget.Toast;
 import java.util.List;
 
 /**
+ * Base Activity class with methods used to handle connections to a Bluetooth device.
  * Created by marko on 2/17/16.
  */
 public abstract class BaseDeviceActivity extends Activity {
@@ -35,17 +36,6 @@ public abstract class BaseDeviceActivity extends Activity {
         Log.d(TAG, "onStart: binding service");
     }
 
-    public void setmDeviceName(String mDeviceName) {
-        this.mDeviceName = mDeviceName;
-    }
-
-    public void setmDeviceAddress(String mDeviceAddress) {
-        this.mDeviceAddress = mDeviceAddress;
-    }
-
-    public void setmServiceId(int mServiceId) {
-        this.mServiceId = mServiceId;
-    }
 
     @Override
     protected void onResume() {
@@ -114,6 +104,25 @@ public abstract class BaseDeviceActivity extends Activity {
     protected abstract void gattDisconnected();
 
     protected abstract void gattConnected();
+
+    protected void reconnectToDevice() {
+        mBluetoothLeService.disconnect();
+        if (mBluetoothLeService.checkBTState(this)) {
+            mBluetoothLeService.connect(mDeviceAddress);
+        }
+    }
+
+    public void setmDeviceName(String mDeviceName) {
+        this.mDeviceName = mDeviceName;
+    }
+
+    public void setmDeviceAddress(String mDeviceAddress) {
+        this.mDeviceAddress = mDeviceAddress;
+    }
+
+    public void setmServiceId(int mServiceId) {
+        this.mServiceId = mServiceId;
+    }
 
 
     // Code to manage Service lifecycle.

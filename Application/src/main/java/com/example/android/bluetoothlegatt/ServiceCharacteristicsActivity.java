@@ -117,7 +117,6 @@ public class ServiceCharacteristicsActivity extends BaseDeviceActivity {
 
     @Override
     protected void gattDisconnected() {
-        mBluetoothLeService.connect(mDeviceAddress);
     }
 
     @Override
