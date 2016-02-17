@@ -14,11 +14,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<manifest
-    package="com.example.android.bluetoothlegatt"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="1"
-    android:versionName="1.0">
+<manifest package="com.example.android.bluetoothlegatt"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="1"
+          android:versionName="1.0">
 
     <!-- Min/target SDK versions (<uses-sdk>) managed by build.gradle -->
 
@@ -58,6 +57,8 @@
             android:enabled="true"/>
 
         <activity android:name=".ServiceCharacteristicsActivity"/>
+        <activity android:name=".CharacteristicDetailsActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -16,17 +16,9 @@
 
 package com.example.android.bluetoothlegatt;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothGattService;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,7 +37,7 @@ import java.util.List;
  * communicates with {@code BluetoothLeService}, which in turn interacts with the
  * Bluetooth LE API.
  */
-public class DeviceServicesActivity extends Activity {
+public class DeviceServicesActivity extends BaseDeviceActivity {
     private final static String TAG = DeviceServicesActivity.class.getSimpleName();
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
@@ -57,66 +49,10 @@ public class DeviceServicesActivity extends Activity {
     private String mDeviceName;
     private String mDeviceAddress;
     private ListView mGattServicesList;
-    private BluetoothLeService mBluetoothLeService;
     private boolean mConnected = false;
-    private List<BluetoothGattService> supportedGattServices;
 
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
-
-    // Code to manage Service lifecycle.
-    private final ServiceConnection mServiceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder service) {
-            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
-            if (!mBluetoothLeService.initialize()) {
-                Log.e(TAG, "Unable to initialize Bluetooth");
-                finish();
-            }
-            // Automatically connects to the device upon successful start-up initialization.
-            mBluetoothLeService.connect(mDeviceAddress);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mBluetoothLeService = null;
-        }
-    };
-
-    // Handles various events fired by the Service.
-    // ACTION_GATT_CONNECTED: connected to a GATT server.
-    // ACTION_GATT_DISCONNECTED: disconnected from a GATT server.
-    // ACTION_GATT_SERVICES_DISCOVERED: discovered GATT services.
-    // ACTION_DATA_AVAILABLE: received data from the device.  This can be a result of read
-    //                        or notification operations.
-    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-                mConnected = true;
-                updateConnectionState(R.string.connected);
-                invalidateOptionsMenu();
-            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
-                mConnected = false;
-                updateConnectionState(R.string.disconnected);
-                invalidateOptionsMenu();
-                clearUI();
-            } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-                supportedGattServices = mBluetoothLeService.getSupportedGattServices();
-                // Show all the supported services and characteristics on the user interface.
-                displayGattServices(supportedGattServices);
-            } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
-            }
-        }
-    };
-
-    // If a given GATT characteristic is selected, check for supported features.  This sample
-    // demonstrates 'Read' and 'Notify' features.  See
-    // http://d.android.com/reference/android/bluetooth/BluetoothGatt.html for the complete
-    // list of supported characteristic features.
 
     AdapterView.OnItemClickListener servicesListClickListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -130,7 +66,6 @@ public class DeviceServicesActivity extends Activity {
             intent.putExtra(EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
             intent.putExtra(EXTRAS_SERVICE_POSITION, mServicePosition);
 
-            mBluetoothLeService.close();
             startActivity(intent);
         }
     };
@@ -149,6 +84,9 @@ public class DeviceServicesActivity extends Activity {
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
 
+        setmDeviceName(mDeviceName);
+        setmDeviceAddress(mDeviceAddress);
+
         // Sets up UI references.
         ((TextView) findViewById(R.id.device_address)).setText(mDeviceAddress);
         mGattServicesList = (ListView) findViewById(R.id.gatt_services_list);
@@ -158,38 +96,6 @@ public class DeviceServicesActivity extends Activity {
 
         getActionBar().setTitle(mDeviceName);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // bind bluetooth le service
-        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        if (mBluetoothLeService != null && mBluetoothLeService.checkBTState(this)) {
-            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
-            Log.d(TAG, "Connect request result=" + result);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(mGattUpdateReceiver);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbindService(mServiceConnection);
-        mBluetoothLeService.close();
-        mBluetoothLeService = null;
     }
 
     @Override
@@ -267,12 +173,28 @@ public class DeviceServicesActivity extends Activity {
         mGattServicesList.setAdapter(gattServiceAdapter);
     }
 
-    private static IntentFilter makeGattUpdateIntentFilter() {
-        final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
-        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
-        return intentFilter;
+    @Override
+    protected void gattDataAvailable(Intent intent) {
+        displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+    }
+
+    @Override
+    protected void gattServicesDiscovered(List<BluetoothGattService> supportedGattServices) {
+        displayGattServices(supportedGattServices);
+    }
+
+    @Override
+    protected void gattDisconnected() {
+        mConnected = false;
+        updateConnectionState(R.string.disconnected);
+        invalidateOptionsMenu();
+        clearUI();
+    }
+
+    @Override
+    protected void gattConnected() {
+        mConnected = true;
+        updateConnectionState(R.string.connected);
+        invalidateOptionsMenu();
     }
 }
