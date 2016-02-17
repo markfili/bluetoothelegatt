@@ -36,7 +36,9 @@
     <string name="label_uuid">UUID:</string>
     <string name="label_instance_id">Instance id:</string>
     <string name="label_service_type">Type:</string>
-    <string name="label_service_data">Service data</string>
+    <string name="title_service_data">Service data</string>
     <string name="bt_needed">Bluetooth needs to be enabled to use this app.</string>
     <string name="permissions_required">Permissions are required to run Bluetooth discovery. Restart the app to try again.</string>
+    <string name="label_characteristic_data">Characteristic data</string>
+    <string name="label_device_data">Device data</string>
 </resources>

@@ -1,9 +1,11 @@
 package com.example.android.bluetoothlegatt;
 
+import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -14,14 +16,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class ServiceCharacteristicsActivity extends BaseDeviceActivity {
 
     private static final String TAG = ServiceCharacteristicsActivity.class.getSimpleName();
 
-    private ListView mGattCharacteristicsList;
-    private TextView mServiceType;
-    private TextView mServiceUUID;
-    private TextView mServiceInstID;
+    @Bind(R.id.device_address)
+    TextView mAddressView;
+    @Bind(R.id.service_type)
+    TextView mServiceType;
+    @Bind(R.id.service_uuid)
+    TextView mServiceUUID;
+    @Bind(R.id.service_id)
+    TextView mServiceInstID;
+    @Bind(R.id.characteristics_listview)
+    ListView mGattCharacteristicsList;
 
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
@@ -30,6 +41,7 @@ public class ServiceCharacteristicsActivity extends BaseDeviceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gatt_characteristics);
+        ButterKnife.bind(this);
 
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(DeviceServicesActivity.EXTRAS_DEVICE_NAME);
@@ -42,16 +54,9 @@ public class ServiceCharacteristicsActivity extends BaseDeviceActivity {
 
         Log.i(TAG, String.format("onCreate: Device name: %s, address: %s, service position: %d", mDeviceName, mDeviceAddress, mServiceId));
 
-        TextView mAddressView = (TextView) findViewById(R.id.device_address);
-        mServiceUUID = (TextView) findViewById(R.id.service_uuid);
-        mServiceType = (TextView) findViewById(R.id.service_type);
-        mServiceInstID = (TextView) findViewById(R.id.service_id);
-
         mAddressView.setText(mDeviceAddress);
-
-        mGattCharacteristicsList = (ListView) findViewById(R.id.characteristics_recyclerview);
-
         setTitle(mDeviceName);
+
         getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -59,7 +64,8 @@ public class ServiceCharacteristicsActivity extends BaseDeviceActivity {
 
         // fill info header with service info
         mServiceUUID.setText(gattService.getUuid().toString());
-        mServiceType.setText("" + gattService.getType());
+        mServiceType.setText(gattService.getType() == BluetoothGattService.SERVICE_TYPE_PRIMARY ? "Primary" : "Secondary");
+
         mServiceInstID.setText("" + gattService.getInstanceId());
 
         // dummy text for item title
@@ -107,7 +113,7 @@ public class ServiceCharacteristicsActivity extends BaseDeviceActivity {
 
     @Override
     protected void gattDataAvailable(Intent intent) {
-        
+
     }
 
     @Override

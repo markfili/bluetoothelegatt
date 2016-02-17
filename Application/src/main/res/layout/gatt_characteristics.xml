@@ -10,86 +10,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ServiceCharacteristicsActivity">
 
-
-    <TextView
-        android:id="@+id/device_address_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingRight="@dimen/margin_small"
-        android:text="@string/label_device_address"/>
-
-    <TextView
-        android:id="@+id/device_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/device_address_label"
-        android:text="@string/no_data"/>
-
-    <TextView
-        android:id="@+id/service_textgroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/device_address_label"
-        android:layout_marginTop="@dimen/margin_small"
-        android:text="@string/label_service_data"
-        android:textSize="12sp"
-        android:textStyle="italic"/>
-
-    <TextView
-        android:id="@+id/service_type_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/service_textgroup"
-        android:paddingRight="@dimen/margin_small"
-        android:text="@string/label_service_type"/>
-
-    <TextView
-        android:id="@+id/service_type"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/service_textgroup"
-        android:layout_toRightOf="@id/service_type_label"
-        android:text="@string/no_data"/>
-
-
-    <TextView
-        android:id="@+id/service_uuid_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/service_type_label"
-        android:paddingRight="@dimen/margin_small"
-        android:text="@string/label_uuid"/>
-
-    <TextView
-        android:id="@+id/service_uuid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/service_type"
-        android:layout_toRightOf="@id/service_uuid_label"
-        android:text="@string/no_data"/>
-
-    <TextView
-        android:id="@+id/service_id_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/service_uuid_label"
-        android:paddingRight="@dimen/margin_small"
-        android:text="@string/label_instance_id"/>
-
-    <TextView
-        android:id="@+id/service_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/service_uuid"
-        android:layout_toRightOf="@id/service_id_label"
-        android:text="@string/no_data"/>
-
+    <include layout="@layout/details_layout" />
 
     <ListView
-        android:id="@+id/characteristics_recyclerview"
+        android:id="@+id/characteristics_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/service_id_label"
+        android:layout_below="@id/label_service_id"
         android:layout_marginTop="@dimen/margin_small"/>
 
 </RelativeLayout>

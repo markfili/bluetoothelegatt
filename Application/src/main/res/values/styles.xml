@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="data_title_style">
+        <item name="android:layout_marginTop">@dimen/margin_small</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="data_label_style">
+        <item name="android:paddingRight">@dimen/margin_small</item>
+    </style>
+
+    <style name="data_value_style"/>
+</resources>
