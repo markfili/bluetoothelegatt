@@ -138,6 +138,7 @@ public class ServiceActivity extends BaseBLEActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                mBluetoothLeService.close();
                 onBackPressed();
                 return true;
         }

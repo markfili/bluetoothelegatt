@@ -235,9 +235,11 @@ public class ScanActivity extends ListActivity {
                     stopScanning();
                     invalidateOptionsMenu();
                     // TODO remove TEST
-                    for (BluetoothDevice device : mBluetoothAdapter.getBondedDevices()) {
-                        mLeDeviceListAdapter.addDevice(device);
-                        mLeDeviceListAdapter.notifyDataSetChanged();
+                    if (BaseBLEActivity.DEBUG) {
+                        for (BluetoothDevice device : mBluetoothAdapter.getBondedDevices()) {
+                            mLeDeviceListAdapter.addDevice(device);
+                            mLeDeviceListAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
             }, BaseBLEActivity.DEBUG ? BaseBLEActivity.SCAN_PERIOD : SCAN_PERIOD);
