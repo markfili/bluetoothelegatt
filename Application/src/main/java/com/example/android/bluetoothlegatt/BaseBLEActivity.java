@@ -22,7 +22,7 @@ public abstract class BaseBLEActivity extends Activity {
 
     private static final String TAG = BaseBLEActivity.class.getSimpleName();
     public static final long SCAN_PERIOD = 10;
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 
     protected BluetoothLeService mBluetoothLeService;
     protected String mDeviceName;

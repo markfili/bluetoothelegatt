@@ -4,8 +4,11 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +35,12 @@ public class CharacteristicActivity extends BaseBLEActivity {
     RelativeLayout mCharacteristicLayout;
     @Bind(R.id.characteristic_uuid)
     TextView mCharacteristicUuidView;
+    @Bind(R.id.edit_text_readable_data)
+    EditText editTextReadableData;
+    @Bind(R.id.edit_text_writable_data)
+    EditText editTextWritableData;
+    @Bind(R.id.button_format_change)
+    Button buttonFormatChange;
 
     private int mServiceType;
     private String mServiceUUID;
@@ -99,7 +108,12 @@ public class CharacteristicActivity extends BaseBLEActivity {
 
     private void displayCharacteristicData(BluetoothGattCharacteristic characteristic) {
         // TODO
-        Toast.makeText(this, "Got value from characteristic: " + characteristic.getValue().length, Toast.LENGTH_LONG).show();
+//        String value = new String(characteristic.getValue());
+//        editTextReadableData.setText(value);
+        Toast toast = Toast.makeText(this, "Screen 4: Work in progress. Please advise.", Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
+        toast.show();
+
     }
 
     @Override
