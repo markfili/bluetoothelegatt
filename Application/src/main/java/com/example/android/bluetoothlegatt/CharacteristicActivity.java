@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class CharacteristicActivity extends BaseBLEActivity {
 
@@ -34,8 +35,6 @@ public class CharacteristicActivity extends BaseBLEActivity {
     RelativeLayout mCharacteristicLayout;
     @Bind(R.id.characteristic_uuid)
     TextView mCharacteristicUuidView;
-
-    // TODO add labels
     @Bind(R.id.edit_text_readable_data)
     EditText mReadableDataEditText;
     @Bind(R.id.edit_text_writable_data)
@@ -107,7 +106,8 @@ public class CharacteristicActivity extends BaseBLEActivity {
         } else {
             logD(TAG, characteristicString);
             // TODO split string to implement HEX/ASCII button
-            mReadableDataEditText.setText(characteristicString);
+            String oldValue = characteristicString.split("\n")[1];
+            mReadableDataEditText.setText(oldValue);
         }
     }
 
@@ -133,10 +133,28 @@ public class CharacteristicActivity extends BaseBLEActivity {
 
     }
 
-    // TODO add button to save data and exit
-//    @OnClick(R.id.)
+    @Override
+    protected void gattDataWritten() {
+
+    }
+
+
+    @OnClick(R.id.button_format_change)
+    protected void onFormatChangeClick() {
+        convertText(mReadableDataEditText);
+    }
+
+    private void convertText(EditText editText) {
+        String text = editText.getText().toString();
+        String result;
+        if (TextUtils.isDigitsOnly(text.replace(" ", ""))) {
+        }
+    }
+
+    @OnClick(R.id.button_save_characteristic)
     protected void saveData() {
         mCharacteristic.setValue(mWritableDataEditText.getText().toString());
         mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
+        onBackPressed();
     }
 }

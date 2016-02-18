@@ -64,7 +64,8 @@ public class BluetoothLeService extends Service {
             "com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
     public final static String EXTRA_DATA =
             "com.example.bluetooth.le.EXTRA_DATA";
-
+    public static final String ACTION_DATA_WRITTEN =
+            "com.example.bluetooth.le.ACTION_DATA_WRITTEN";
 
     public final static UUID UUID_HEART_RATE_MEASUREMENT =
             UUID.fromString(GattServicesAttributes.HEART_RATE_MEASUREMENT);
@@ -114,6 +115,11 @@ public class BluetoothLeService extends Service {
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+        }
+
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            broadcastUpdate(ACTION_DATA_WRITTEN, characteristic);
         }
     };
 
@@ -278,6 +284,14 @@ public class BluetoothLeService extends Service {
             return;
         }
         mBluetoothGatt.readCharacteristic(characteristic);
+    }
+
+    public boolean writeCharacteristic(BluetoothGattCharacteristic characteristic) {
+        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            Log.w(TAG, "BluetoothAdapter not initialized");
+            return false;
+        }
+        return mBluetoothGatt.writeCharacteristic(characteristic);
     }
 
     /**

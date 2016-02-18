@@ -93,9 +93,14 @@ public abstract class BaseBLEActivity extends BaseActivity {
                 showDebugToast("Data available from " + mDeviceName);
                 logD(TAG, "onReceive: Data available from " + mDeviceName);
                 gattDataAvailable(intent);
+            } else if (BluetoothLeService.ACTION_DATA_WRITTEN.equals(action)) {
+                showDebugToast("Data written to " + mDeviceName);
+                logD(TAG, "onReceive: Data written to " + mDeviceName);
+                gattDataWritten();
             }
         }
     };
+
 
 
     protected void showHome() {
@@ -111,6 +116,8 @@ public abstract class BaseBLEActivity extends BaseActivity {
     protected abstract void gattDisconnected();
 
     protected abstract void gattConnected();
+
+    protected abstract void gattDataWritten();
 
     protected void reconnectToDevice() {
         mBluetoothLeService.disconnect();

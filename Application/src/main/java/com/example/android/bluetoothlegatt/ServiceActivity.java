@@ -164,4 +164,9 @@ public class ServiceActivity extends BaseBLEActivity {
     protected void gattConnected() {
 
     }
+
+    @Override
+    protected void gattDataWritten() {
+
+    }
 }

@@ -195,4 +195,9 @@ public class DeviceActivity extends BaseBLEActivity {
         updateConnectionState(R.string.connected);
         invalidateOptionsMenu();
     }
+
+    @Override
+    protected void gattDataWritten() {
+
+    }
 }
