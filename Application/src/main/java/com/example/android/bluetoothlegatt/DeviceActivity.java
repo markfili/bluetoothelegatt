@@ -155,9 +155,8 @@ public class DeviceActivity extends BaseBLEActivity {
             HashMap<String, String> currentServiceData = new HashMap<>();
             uuid = gattService.getUuid().toString();
 
-            // TODO swap SampleGattAttributes with real values
             currentServiceData.put(
-                    LIST_NAME, SampleGattAttributes.lookup(uuid, unknownServiceString));
+                    LIST_NAME, GattServicesAttributes.lookup(uuid, unknownServiceString));
             currentServiceData.put(LIST_UUID, uuid);
             gattServiceData.add(currentServiceData);
         }

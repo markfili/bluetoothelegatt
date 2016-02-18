@@ -4,10 +4,9 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,17 +34,19 @@ public class CharacteristicActivity extends BaseBLEActivity {
     RelativeLayout mCharacteristicLayout;
     @Bind(R.id.characteristic_uuid)
     TextView mCharacteristicUuidView;
+
+    // TODO add labels
     @Bind(R.id.edit_text_readable_data)
-    EditText editTextReadableData;
+    EditText mReadableDataEditText;
     @Bind(R.id.edit_text_writable_data)
-    EditText editTextWritableData;
-    @Bind(R.id.button_format_change)
-    Button buttonFormatChange;
+    EditText mWritableDataEditText;
+
 
     private int mServiceType;
     private String mServiceUUID;
     private int mServiceInstanceID;
     private String mCharacteristicUUID;
+    private BluetoothGattCharacteristic mCharacteristic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +100,15 @@ public class CharacteristicActivity extends BaseBLEActivity {
 
     @Override
     protected void gattDataAvailable(Intent intent) {
-
+        String characteristicString = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
+        if (TextUtils.isEmpty(characteristicString) || characteristicString.endsWith("\n00 00 ")) {
+            // TODO hide edittexts
+            Toast.makeText(this, "Characteristic has no readable data.", Toast.LENGTH_LONG).show();
+        } else {
+            logD(TAG, characteristicString);
+            // TODO split string to implement HEX/ASCII button
+            mReadableDataEditText.setText(characteristicString);
+        }
     }
 
     @Override
@@ -108,14 +117,10 @@ public class CharacteristicActivity extends BaseBLEActivity {
     }
 
     private void displayCharacteristicData(BluetoothGattCharacteristic characteristic) {
-        // TODO
+        mCharacteristic = characteristic;
         if (characteristic != null) {
-            int properties = characteristic.getProperties();
-            logD(TAG, String.valueOf(properties));
+            mBluetoothLeService.readCharacteristic(characteristic);
         }
-//        String value = new String(characteristic.getValue());
-//        editTextReadableData.setText(value);
-
     }
 
     @Override
@@ -126,5 +131,12 @@ public class CharacteristicActivity extends BaseBLEActivity {
     @Override
     protected void gattConnected() {
 
+    }
+
+    // TODO add button to save data and exit
+//    @OnClick(R.id.)
+    protected void saveData() {
+        mCharacteristic.setValue(mWritableDataEditText.getText().toString());
+        mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
     }
 }

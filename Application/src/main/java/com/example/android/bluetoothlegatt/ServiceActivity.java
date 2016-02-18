@@ -115,7 +115,7 @@ public class ServiceActivity extends BaseBLEActivity {
             HashMap<String, String> currentCharaData = new HashMap<>();
             charUUID = gattCharacteristic.getUuid().toString();
             currentCharaData.put(
-                    LIST_NAME, SampleGattAttributes.lookup(charUUID, unknownCharaString));
+                    LIST_NAME, GattServicesAttributes.lookup(charUUID, unknownCharaString));
             currentCharaData.put(LIST_UUID, charUUID);
             gattCharacteristicGroupData.add(currentCharaData);
         }
