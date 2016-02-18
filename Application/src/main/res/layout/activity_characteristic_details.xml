@@ -10,27 +10,65 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".CharacteristicActivity">
 
-    <include layout="@layout/details_layout" android:id="@+id/layout_characteristic"/>
-
-    <EditText
-        android:id="@+id/edit_text_readable_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/layout_characteristic"
-        android:hint="Readable data"/>
-
-    <EditText
-        android:id="@+id/edit_text_writable_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/edit_text_readable_data"
-        android:hint="Writable data"/>
+    <include
+        android:id="@+id/layout_characteristic"
+        layout="@layout/details_layout"/>
 
     <Button
         android:id="@+id/button_format_change"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/edit_text_writable_data"
-        android:text="HEX/ASCII"/>
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/layout_characteristic"
+        android:text="@string/button_label_hex_ascii"/>
+
+    <TextView
+        android:id="@+id/label_read_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/edit_text_readable_data"
+        android:labelFor="@id/edit_text_readable_data"
+        android:text="@string/label_value"/>
+
+    <EditText
+        android:id="@id/edit_text_readable_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_format_change"
+        android:background="@null"
+        android:clickable="false"
+        android:editable="false"
+        android:gravity="top"
+        android:hint="@string/hint_readable_data"
+        android:inputType="none"
+        android:minLines="2"/>
+
+    <TextView
+        android:id="@+id/label_write_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_readable_data"
+        android:labelFor="@+id/edit_text_writable_data"
+        android:text="@string/label_new_value"/>
+
+    <EditText
+        android:id="@id/edit_text_writable_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/label_write_value"
+        android:gravity="top"
+        android:hint="@string/hint_writable_data"
+        android:minLines="2"/>
+
+    <Button
+        android:id="@+id/button_save_characteristic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/holo_blue_light"
+        android:text="@string/save"
+        android:textAllCaps="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white"/>
 
 </RelativeLayout>

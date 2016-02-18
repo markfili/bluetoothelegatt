@@ -43,4 +43,10 @@
     <string name="label_device_data">Device data</string>
     <string name="primary">Primary</string>
     <string name="secondary">Secondary</string>
+    <string name="label_value">Value:</string>
+    <string name="label_new_value">New value:</string>
+    <string name="hint_writable_data">Writable data</string>
+    <string name="hint_readable_data">Readable data</string>
+    <string name="button_label_hex_ascii">HEX/ASCII</string>
+    <string name="save">Save</string>
 </resources>
