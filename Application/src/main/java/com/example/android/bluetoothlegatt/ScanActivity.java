@@ -235,7 +235,7 @@ public class ScanActivity extends ListActivity {
                     stopScanning();
                     invalidateOptionsMenu();
                     // TODO remove TEST
-                    if (BaseBLEActivity.DEBUG) {
+                    if (BaseActivity.DEBUG) {
                         for (BluetoothDevice device : mBluetoothAdapter.getBondedDevices()) {
                             mLeDeviceListAdapter.addDevice(device);
                             mLeDeviceListAdapter.notifyDataSetChanged();

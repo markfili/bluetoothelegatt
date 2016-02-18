@@ -109,11 +109,12 @@ public class CharacteristicActivity extends BaseBLEActivity {
 
     private void displayCharacteristicData(BluetoothGattCharacteristic characteristic) {
         // TODO
+        if (characteristic != null) {
+            int properties = characteristic.getProperties();
+            logD(TAG, String.valueOf(properties));
+        }
 //        String value = new String(characteristic.getValue());
 //        editTextReadableData.setText(value);
-        Toast toast = Toast.makeText(this, "Screen 4: Work in progress. Please advise.", Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
-        toast.show();
 
     }
 
