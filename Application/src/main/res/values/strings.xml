@@ -49,4 +49,5 @@
     <string name="hint_readable_data">Readable data</string>
     <string name="button_label_hex_ascii">HEX/ASCII</string>
     <string name="save">Save</string>
+    <string name="label_permission">Permissions:</string>
 </resources>

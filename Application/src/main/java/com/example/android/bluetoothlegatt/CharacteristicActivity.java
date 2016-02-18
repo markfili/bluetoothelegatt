@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothGattService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -35,17 +36,16 @@ public class CharacteristicActivity extends BaseBLEActivity {
     RelativeLayout mCharacteristicLayout;
     @Bind(R.id.characteristic_uuid)
     TextView mCharacteristicUuidView;
+    @Bind(R.id.characteristic_permission)
+    TextView mCharacteristicPermission;
     @Bind(R.id.edit_text_readable_data)
     EditText mReadableDataEditText;
     @Bind(R.id.edit_text_writable_data)
     EditText mWritableDataEditText;
 
-
-    private int mServiceType;
-    private String mServiceUUID;
-    private int mServiceInstanceID;
     private String mCharacteristicUUID;
     private BluetoothGattCharacteristic mCharacteristic;
+    private String[] characteristicValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +79,9 @@ public class CharacteristicActivity extends BaseBLEActivity {
         mDeviceAddress = intent.getStringExtra(DeviceActivity.EXTRAS_DEVICE_ADDRESS);
         mServicePosition = intent.getIntExtra(DeviceActivity.EXTRAS_SERVICE_POSITION, 0);
 
-        mServiceType = intent.getIntExtra(ServiceActivity.EXTRAS_SERVICE_TYPE, 0);
-        mServiceUUID = intent.getStringExtra(ServiceActivity.EXTRAS_SERVICE_UUID);
-        mServiceInstanceID = intent.getIntExtra(ServiceActivity.EXTRAS_SERVICE_ID, 0);
+        int mServiceType = intent.getIntExtra(ServiceActivity.EXTRAS_SERVICE_TYPE, 0);
+        String mServiceUUID = intent.getStringExtra(ServiceActivity.EXTRAS_SERVICE_UUID);
+        int mServiceInstanceID = intent.getIntExtra(ServiceActivity.EXTRAS_SERVICE_ID, 0);
         mCharacteristicUUID = intent.getStringExtra(ServiceActivity.EXTRAS_CHARACTERISTIC_UUID);
 
         setmDeviceName(mDeviceName);
@@ -101,25 +101,20 @@ public class CharacteristicActivity extends BaseBLEActivity {
     protected void gattDataAvailable(Intent intent) {
         String characteristicString = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
         if (TextUtils.isEmpty(characteristicString) || characteristicString.endsWith("\n00 00 ")) {
-            // TODO hide edittexts
             Toast.makeText(this, "Characteristic has no readable data.", Toast.LENGTH_LONG).show();
         } else {
             logD(TAG, characteristicString);
-            // TODO split string to implement HEX/ASCII button
-            String oldValue = characteristicString.split("\n")[1];
-            mReadableDataEditText.setText(oldValue);
+            characteristicValues = characteristicString.split("\n");
+            mReadableDataEditText.setText(characteristicValues[0]);
         }
     }
 
     @Override
     protected void gattServicesDiscovered(List<BluetoothGattService> supportedGattServices) {
-        displayCharacteristicData(supportedGattServices.get(mServicePosition).getCharacteristic(UUID.fromString(mCharacteristicUUID)));
-    }
-
-    private void displayCharacteristicData(BluetoothGattCharacteristic characteristic) {
-        mCharacteristic = characteristic;
-        if (characteristic != null) {
-            mBluetoothLeService.readCharacteristic(characteristic);
+        mCharacteristic = supportedGattServices.get(mServicePosition).getCharacteristic(UUID.fromString(mCharacteristicUUID));
+        if (mCharacteristic != null) {
+            mCharacteristicPermission.setText(permissionToString(mCharacteristic.getPermissions()));
+            mBluetoothLeService.readCharacteristic(mCharacteristic);
         }
     }
 
@@ -135,26 +130,52 @@ public class CharacteristicActivity extends BaseBLEActivity {
 
     @Override
     protected void gattDataWritten() {
-
+        // TODO exit or refresh data
     }
 
 
     @OnClick(R.id.button_format_change)
     protected void onFormatChangeClick() {
-        convertText(mReadableDataEditText);
-    }
-
-    private void convertText(EditText editText) {
-        String text = editText.getText().toString();
-        String result;
-        if (TextUtils.isDigitsOnly(text.replace(" ", ""))) {
-        }
+        mReadableDataEditText.setText(TextUtils.equals(mReadableDataEditText.getText().toString(), characteristicValues[0]) ? characteristicValues[1] : characteristicValues[0]);
     }
 
     @OnClick(R.id.button_save_characteristic)
     protected void saveData() {
-        mCharacteristic.setValue(mWritableDataEditText.getText().toString());
-        mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
-        onBackPressed();
+        if (mCharacteristic.getPermissions() == BluetoothGattCharacteristic.PERMISSION_WRITE) {
+            mCharacteristic.setValue(mWritableDataEditText.getText().toString());
+            boolean saved = mBluetoothLeService.writeCharacteristic(mCharacteristic);
+            Log.d(TAG, "saveData: " + saved);
+            if (saved) {
+                Toast.makeText(this, "Written to device.", Toast.LENGTH_LONG).show();
+                onBackPressed();
+            } else {
+                // TODO handle failure
+                Toast.makeText(this, "Failed writing to device. Check BLE connectivity.", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, "I'm sorry, Dave. I'm afraid I can't do that.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "It's not permitted by the device.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private String permissionToString(int permission) {
+        switch (permission) {
+            case BluetoothGattCharacteristic.PERMISSION_READ:
+                return "Read";
+            case BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED:
+                return "Read encrypted";
+            case BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED_MITM:
+                return "Read encrypted MITM";
+            case BluetoothGattCharacteristic.PERMISSION_WRITE:
+                return "Write";
+            case BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED:
+                return "Write encrypted";
+            case BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED_MITM:
+                return "Write encrypted MITM";
+            case BluetoothGattCharacteristic.PERMISSION_WRITE_SIGNED:
+                return "Write signed";
+            default:
+                return "Unknown";
+        }
     }
 }

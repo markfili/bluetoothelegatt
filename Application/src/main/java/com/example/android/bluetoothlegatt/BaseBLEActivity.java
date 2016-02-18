@@ -95,7 +95,7 @@ public abstract class BaseBLEActivity extends BaseActivity {
                 gattDataAvailable(intent);
             } else if (BluetoothLeService.ACTION_DATA_WRITTEN.equals(action)) {
                 showDebugToast("Data written to " + mDeviceName);
-                logD(TAG, "onReceive: Data written to " + mDeviceName);
+                logD(TAG, "onReceive ACTION DATA WRITTEN: Data written to " + mDeviceName);
                 gattDataWritten();
             }
         }
