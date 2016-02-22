@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -27,23 +28,23 @@ public class ServiceActivity extends BaseBLEActivity {
     public static final String EXTRAS_SERVICE_ID = "EXTRAS_SERVICE_ID";
     public static final String EXTRAS_CHARACTERISTIC_UUID = "EXTRAS_CHARACTERISTIC_UUID";
 
+    @Bind(R.id.title_device_name)
+    TextView mDeviceNameTitle;
+    @Bind(R.id.title_service_name)
+    TextView mServiceNameTitle;
     @Bind(R.id.device_address)
     TextView mAddressView;
-    @Bind(R.id.service_type)
-    TextView mServiceTypeView;
     @Bind(R.id.service_uuid)
     TextView mServiceUUIDView;
-    @Bind(R.id.service_id)
-    TextView mServiceInstanceIDView;
     @Bind(R.id.characteristics_listview)
     ListView mGattCharacteristicsListView;
+    @Bind(R.id.layout_details_service)
+    RelativeLayout mServiceDetailsLayout;
 
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
 
-    private int mServiceType;
     private String mServiceUUID;
-    private int mServiceInstanceID;
 
     private AdapterView.OnItemClickListener onCharacteristicClickListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -51,11 +52,9 @@ public class ServiceActivity extends BaseBLEActivity {
             Intent intent = new Intent(ServiceActivity.this, CharacteristicActivity.class);
             intent.putExtra(DeviceActivity.EXTRAS_DEVICE_NAME, mDeviceName);
             intent.putExtra(DeviceActivity.EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
+            intent.putExtra(ServiceActivity.EXTRAS_SERVICE_UUID, mServiceUUID);
 
             intent.putExtra(ServiceActivity.EXTRAS_CHARACTERISTIC_UUID, mBluetoothGattService.getCharacteristics().get(position).getUuid().toString());
-            intent.putExtra(ServiceActivity.EXTRAS_SERVICE_TYPE, mServiceType);
-            intent.putExtra(ServiceActivity.EXTRAS_SERVICE_UUID, mServiceUUID);
-            intent.putExtra(ServiceActivity.EXTRAS_SERVICE_ID, mServiceInstanceID);
 
             mBluetoothLeService.close();
             startActivity(intent);
@@ -85,20 +84,23 @@ public class ServiceActivity extends BaseBLEActivity {
 
         mAddressView.setText(mDeviceAddress);
 
-        setTitle(mDeviceName);
-        showHome();
+        setupUI();
 
         Log.i(TAG, String.format("onCreate: Device name: %s, address: %s, service position: %d", mDeviceName, mDeviceAddress, mServicePosition));
     }
 
+    private void setupUI() {
+        mServiceDetailsLayout.setVisibility(View.VISIBLE);
+        mDeviceNameTitle.setText(mDeviceName);
+        showHome();
+    }
+
     protected void displayGattCharacteristics(BluetoothGattService gattService) {
         mServiceUUID = gattService.getUuid().toString();
-        mServiceType = gattService.getType();
-        mServiceInstanceID = gattService.getInstanceId();
+
         // fill info header with service info
         mServiceUUIDView.setText(mServiceUUID);
-        mServiceTypeView.setText(mServiceType == BluetoothGattService.SERVICE_TYPE_PRIMARY ? getString(R.string.primary) : getString(R.string.secondary));
-        mServiceInstanceIDView.setText(String.format("%d", mServiceInstanceID));
+        mServiceNameTitle.setText(GattServicesAttributes.lookup(mServiceUUID, getString(R.string.unknown_service)));
 
         // dummy text for item title
         String unknownCharaString = getResources().getString(R.string.unknown_characteristic);

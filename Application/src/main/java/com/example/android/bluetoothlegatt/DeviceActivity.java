@@ -31,6 +31,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * For a given BLE device, this Activity provides the user interface to connect, display data,
  * and display GATT services and characteristics supported by the device.  The Activity
@@ -43,9 +46,11 @@ public class DeviceActivity extends BaseBLEActivity {
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
     public static final String EXTRAS_SERVICE_POSITION = "SERVICE_POSITION";
+    @Bind(R.id.title_device_name)
+    TextView mDeviceNameTitle;
 
-    private TextView mConnectionState;
-    private TextView mDataField;
+    //    private TextView mConnectionState;
+//    private TextView mDataField;
     private String mDeviceName;
     private String mDeviceAddress;
     private ListView mGattServicesList;
@@ -73,13 +78,14 @@ public class DeviceActivity extends BaseBLEActivity {
 
     private void clearUI() {
         mGattServicesList.setAdapter(null);
-        mDataField.setText(R.string.no_data);
+//        mDataField.setText(R.string.no_data);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device);
+        ButterKnife.bind(this);
 
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
@@ -92,10 +98,8 @@ public class DeviceActivity extends BaseBLEActivity {
         ((TextView) findViewById(R.id.device_address)).setText(mDeviceAddress);
         mGattServicesList = (ListView) findViewById(R.id.gatt_services_list);
         mGattServicesList.setOnItemClickListener(servicesListClickListener);
-        mConnectionState = (TextView) findViewById(R.id.connection_state);
-        mDataField = (TextView) findViewById(R.id.data_value);
 
-//        TODO mDeviceName
+        mDeviceNameTitle.setText(mDeviceName);
         showHome();
     }
 
@@ -132,14 +136,17 @@ public class DeviceActivity extends BaseBLEActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mConnectionState.setText(resourceId);
+
+                // TODO update connection state
+//                mConnectionState.setText(resourceId);
             }
         });
     }
 
     private void displayData(String data) {
         if (data != null) {
-            mDataField.setText(data);
+            // TODO DISPLAY DATA
+//            mDataField.setText(data);
         }
     }
 

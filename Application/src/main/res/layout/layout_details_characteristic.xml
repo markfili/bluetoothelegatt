@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:id="@+id/layout_characteristic"
+    android:id="@+id/layout_details_characteristic"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:showIn="@layout/details_layout">
+    android:visibility="gone"
+    tools:visibility="visible"
+    tools:showIn="@layout/layout_details">
 
     <TextView
         android:id="@+id/title_characteristic_name"

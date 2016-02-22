@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,20 +24,23 @@ public class CharacteristicActivity extends BaseBLEActivity {
 
     private static final String TAG = CharacteristicActivity.class.getSimpleName();
 
+    @Bind(R.id.title_device_name)
+    TextView mDeviceNameTitle;
+    @Bind(R.id.title_service_name)
+    TextView mServiceNameTitle;
+    @Bind(R.id.title_characteristic_name)
+    TextView mCharacteristicNameTitle;
     @Bind(R.id.device_address)
     TextView mDeviceAddressView;
-    @Bind(R.id.service_type)
-    TextView mServiceTypeView;
     @Bind(R.id.service_uuid)
     TextView mServiceUuidView;
-    @Bind(R.id.service_id)
-    TextView mServiceIdView;
-    @Bind(R.id.layout_characteristic)
+    @Bind(R.id.layout_details_service)
+    RelativeLayout mServiceLayout;
+    @Bind(R.id.layout_details_characteristic)
     RelativeLayout mCharacteristicLayout;
     @Bind(R.id.characteristic_uuid)
     TextView mCharacteristicUuidView;
-    @Bind(R.id.characteristic_permission)
-    TextView mCharacteristicPermission;
+
     @Bind(R.id.edit_text_readable_data)
     EditText mReadableDataEditText;
     @Bind(R.id.edit_text_writable_data)
@@ -45,6 +49,7 @@ public class CharacteristicActivity extends BaseBLEActivity {
     private String mCharacteristicUUID;
     private BluetoothGattCharacteristic mCharacteristic;
     private String[] characteristicValues;
+    private String mServiceUUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +72,9 @@ public class CharacteristicActivity extends BaseBLEActivity {
     }
 
     private void showUI() {
-//        TODO setTitle(mDeviceName);
+        mCharacteristicLayout.setVisibility(View.VISIBLE);
+        mServiceLayout.setVisibility(View.VISIBLE);
+        mDeviceNameTitle.setText(mDeviceName);
         showHome();
     }
 
@@ -77,9 +84,7 @@ public class CharacteristicActivity extends BaseBLEActivity {
         mDeviceAddress = intent.getStringExtra(DeviceActivity.EXTRAS_DEVICE_ADDRESS);
         mServicePosition = intent.getIntExtra(DeviceActivity.EXTRAS_SERVICE_POSITION, 0);
 
-        int mServiceType = intent.getIntExtra(ServiceActivity.EXTRAS_SERVICE_TYPE, 0);
-        String mServiceUUID = intent.getStringExtra(ServiceActivity.EXTRAS_SERVICE_UUID);
-        int mServiceInstanceID = intent.getIntExtra(ServiceActivity.EXTRAS_SERVICE_ID, 0);
+        mServiceUUID = intent.getStringExtra(ServiceActivity.EXTRAS_SERVICE_UUID);
         mCharacteristicUUID = intent.getStringExtra(ServiceActivity.EXTRAS_CHARACTERISTIC_UUID);
 
         setmDeviceName(mDeviceName);
@@ -87,12 +92,10 @@ public class CharacteristicActivity extends BaseBLEActivity {
         setmServicePosition(mServicePosition);
 
         mDeviceAddressView.setText(mDeviceAddress);
-        mServiceIdView.setText(String.format("%d", mServicePosition));
-        mServiceTypeView.setText(mServiceType == BluetoothGattService.SERVICE_TYPE_PRIMARY ? getString(R.string.primary) : getString(R.string.secondary));
         mServiceUuidView.setText(String.format("%s", mServiceUUID));
+        mCharacteristicNameTitle.setText(GattServicesAttributes.lookup(mCharacteristicUUID, getString(R.string.unknown_characteristic)));
+        mServiceNameTitle.setText(GattServicesAttributes.lookup(mServiceUUID, getString(R.string.unknown_service)));
         mCharacteristicUuidView.setText(mCharacteristicUUID);
-
-        setTitle(mDeviceName);
     }
 
     @Override
@@ -111,7 +114,8 @@ public class CharacteristicActivity extends BaseBLEActivity {
     protected void gattServicesDiscovered(List<BluetoothGattService> supportedGattServices) {
         mCharacteristic = supportedGattServices.get(mServicePosition).getCharacteristic(UUID.fromString(mCharacteristicUUID));
         if (mCharacteristic != null) {
-            mCharacteristicPermission.setText(permissionToString(mCharacteristic.getPermissions()));
+        // TODO PERMISSIONS
+        // mCharacteristicPermission.setText(permissionToString(mCharacteristic.getPermissions()));
             mBluetoothLeService.readCharacteristic(mCharacteristic);
         }
     }
