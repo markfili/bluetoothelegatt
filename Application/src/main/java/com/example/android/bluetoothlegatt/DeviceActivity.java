@@ -77,7 +77,6 @@ public class DeviceActivity extends BaseBLEActivity {
 
     private void clearUI() {
         mGattServicesList.setAdapter(null);
-//        mDataField.setText(R.string.no_data);
     }
 
     @Override
