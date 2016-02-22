@@ -13,7 +13,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import butterknife.Bind;
@@ -42,7 +44,7 @@ public class CharacteristicActivity extends BaseBLEActivity {
     @Bind(R.id.characteristic_uuid)
     TextView mCharacteristicUuidView;
 
-    @Bind({ R.id.prop_read, R.id.prop_write, R.id.prop_notify})
+    @Bind({R.id.prop_read, R.id.prop_write, R.id.prop_notify})
     List<TextView> propertyViews;
 
     @Bind(R.id.edit_text_readable_data)
@@ -54,6 +56,7 @@ public class CharacteristicActivity extends BaseBLEActivity {
     private BluetoothGattCharacteristic mCharacteristic;
     private String[] characteristicValues;
     private String mServiceUUID;
+    private Map<Integer, Integer> propertiesMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +103,11 @@ public class CharacteristicActivity extends BaseBLEActivity {
         mCharacteristicNameTitle.setText(GattServicesAttributes.lookup(mCharacteristicUUID, getString(R.string.unknown_characteristic)));
         mServiceNameTitle.setText(GattServicesAttributes.lookup(mServiceUUID, getString(R.string.unknown_service)));
         mCharacteristicUuidView.setText(mCharacteristicUUID);
+
+        propertiesMap = new HashMap<>();
+        propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_READ, 0);
+        propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_WRITE, 1);
+        propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_NOTIFY, 2);
     }
 
     @Override
@@ -109,6 +117,7 @@ public class CharacteristicActivity extends BaseBLEActivity {
             Toast.makeText(this, "Characteristic has no readable data.", Toast.LENGTH_LONG).show();
         } else {
             logD(TAG, characteristicString);
+            showProperty();
             characteristicValues = characteristicString.split("\n");
             mReadableDataEditText.setText(characteristicValues[0]);
         }
@@ -117,10 +126,22 @@ public class CharacteristicActivity extends BaseBLEActivity {
     @Override
     protected void gattServicesDiscovered(List<BluetoothGattService> supportedGattServices) {
         mCharacteristic = supportedGattServices.get(mServicePosition).getCharacteristic(UUID.fromString(mCharacteristicUUID));
+        readCharacteristic();
+    }
+
+    private void readCharacteristic() {
         if (mCharacteristic != null) {
-            // TODO PERMISSIONS
-            // mCharacteristicPermission.setText(permissionToString(mCharacteristic.getPermissions()));
             mBluetoothLeService.readCharacteristic(mCharacteristic);
+        }
+    }
+
+    private void showProperty() {
+        for (TextView propertyView : propertyViews) {
+            propertyView.setEnabled(false);
+        }
+
+        if (propertiesMap.containsKey(mCharacteristic.getProperties())) {
+            propertyViews.get(propertiesMap.get(mCharacteristic.getProperties())).setEnabled(true);
         }
     }
 
@@ -166,12 +187,18 @@ public class CharacteristicActivity extends BaseBLEActivity {
                 }
                 break;
             case R.id.ble_action_read:
+                readCharacteristic();
                 break;
             case R.id.ble_action_notify:
+                notifyDevice();
                 break;
             default:
                 break;
         }
+    }
+
+    private void notifyDevice() {
+
     }
 
     private String permissionToString(int permission) {

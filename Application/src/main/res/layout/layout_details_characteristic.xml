@@ -58,7 +58,7 @@
             android:layout_marginLeft="2dp"
             android:layout_marginRight="2dp"
             android:background="@drawable/background_selector"
-            android:enabled="true"
+            android:enabled="false"
             android:text="@string/permission_write"
             android:textColor="@color/text_color_selector"/>
 
