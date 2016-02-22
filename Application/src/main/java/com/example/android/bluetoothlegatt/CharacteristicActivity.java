@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -50,7 +49,7 @@ public class CharacteristicActivity extends BaseBLEActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_characteristic_details);
+        setContentView(R.layout.activity_characteristic);
         ButterKnife.bind(this);
         getIntentData();
         showUI();

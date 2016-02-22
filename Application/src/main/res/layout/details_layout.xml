@@ -4,10 +4,10 @@
               android:padding="@dimen/activity_vertical_margin"
               android:orientation="vertical">
 
-    <include layout="@layout/details_device_layout"/>
+    <include layout="@layout/layout_details_device"/>
 
-    <include layout="@layout/details_service_layout"/>
+    <include layout="@layout/layout_details_service"/>
 
-    <include layout="@layout/details_characteristic_layout"/>
+    <include layout="@layout/layout_details_characteristic"/>
 
 </LinearLayout>

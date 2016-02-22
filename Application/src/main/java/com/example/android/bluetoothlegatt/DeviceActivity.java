@@ -79,7 +79,7 @@ public class DeviceActivity extends BaseBLEActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gatt_services);
+        setContentView(R.layout.activity_device);
 
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);

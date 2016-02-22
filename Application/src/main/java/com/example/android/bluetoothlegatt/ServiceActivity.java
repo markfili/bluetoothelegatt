@@ -67,7 +67,7 @@ public class ServiceActivity extends BaseBLEActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gatt_characteristics);
+        setContentView(R.layout.activity_service);
         ButterKnife.bind(this);
 
         getIntentData();
