@@ -46,6 +46,8 @@ public class ServiceActivity extends BaseBLEActivity {
 
     private String mServiceUUID;
 
+    private BluetoothGattService mBluetoothGattService;
+
     private AdapterView.OnItemClickListener onCharacteristicClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -53,14 +55,13 @@ public class ServiceActivity extends BaseBLEActivity {
             intent.putExtra(DeviceActivity.EXTRAS_DEVICE_NAME, mDeviceName);
             intent.putExtra(DeviceActivity.EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
             intent.putExtra(ServiceActivity.EXTRAS_SERVICE_UUID, mServiceUUID);
-
+            intent.putExtra(DeviceActivity.EXTRAS_SERVICE_POSITION, mServicePosition);
             intent.putExtra(ServiceActivity.EXTRAS_CHARACTERISTIC_UUID, mBluetoothGattService.getCharacteristics().get(position).getUuid().toString());
 
             mBluetoothLeService.close();
             startActivity(intent);
         }
     };
-    private BluetoothGattService mBluetoothGattService;
 
 
     @Override

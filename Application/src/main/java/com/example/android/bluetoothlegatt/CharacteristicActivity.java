@@ -114,7 +114,7 @@ public class CharacteristicActivity extends BaseBLEActivity {
     protected void gattDataAvailable(Intent intent) {
         String characteristicString = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
         if (TextUtils.isEmpty(characteristicString) || characteristicString.endsWith("\n00 00 ")) {
-            Toast.makeText(this, "Characteristic has no readable data.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "gattDataAvailable characteristic has no readable data.", Toast.LENGTH_LONG).show();
         } else {
             logD(TAG, characteristicString);
             showProperty();
@@ -126,12 +126,16 @@ public class CharacteristicActivity extends BaseBLEActivity {
     @Override
     protected void gattServicesDiscovered(List<BluetoothGattService> supportedGattServices) {
         mCharacteristic = supportedGattServices.get(mServicePosition).getCharacteristic(UUID.fromString(mCharacteristicUUID));
+        if (mCharacteristic == null) logD(TAG, "gattServicesDiscovered null characteristic has no readable data.");
         readCharacteristic();
     }
 
     private void readCharacteristic() {
         if (mCharacteristic != null) {
+            logD(TAG, "reading characteristic");
             mBluetoothLeService.readCharacteristic(mCharacteristic);
+        } else {
+            logD(TAG, "readCharacteristic null characteristic");
         }
     }
 
@@ -169,26 +173,31 @@ public class CharacteristicActivity extends BaseBLEActivity {
     @OnClick({R.id.ble_action_read, R.id.ble_action_write, R.id.ble_action_notify})
     protected void saveData(View view) {
         switch (view.getId()) {
-            case R.id.ble_action_write:
-                if (mCharacteristic.getPermissions() == BluetoothGattCharacteristic.PERMISSION_WRITE) {
-                    mCharacteristic.setValue(mWritableDataEditText.getText().toString());
-                    boolean saved = mBluetoothLeService.writeCharacteristic(mCharacteristic);
-                    Log.d(TAG, "saveData: " + saved);
-                    if (saved) {
-                        Toast.makeText(this, "Written to device.", Toast.LENGTH_LONG).show();
-                        onBackPressed();
-                    } else {
-                        // TODO handle failure
-                        Toast.makeText(this, "Failed writing to device. Check BLE connectivity.", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(this, "I'm sorry, Dave. I'm afraid I can't do that.", Toast.LENGTH_LONG).show();
-                    Toast.makeText(this, "It's not permitted by the device.", Toast.LENGTH_LONG).show();
-                }
-                break;
             case R.id.ble_action_read:
                 readCharacteristic();
                 break;
+            case R.id.ble_action_write:
+                if (mCharacteristic != null) {
+                    if (mCharacteristic.getPermissions() == BluetoothGattCharacteristic.PERMISSION_WRITE) {
+                        mCharacteristic.setValue(mWritableDataEditText.getText().toString());
+                        boolean saved = mBluetoothLeService.writeCharacteristic(mCharacteristic);
+                        Log.d(TAG, "saveData: " + saved);
+                        if (saved) {
+                            Toast.makeText(this, "Written to device.", Toast.LENGTH_LONG).show();
+                            onBackPressed();
+                        } else {
+                            // TODO handle failure
+                            Toast.makeText(this, "Failed writing to device. Check BLE connectivity.", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "I'm sorry, Dave. I'm afraid I can't do that.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "It's not permitted by the device.", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    logD(TAG, "characteristic null");
+                }
+                break;
+
             case R.id.ble_action_notify:
                 notifyDevice();
                 break;
@@ -199,26 +208,5 @@ public class CharacteristicActivity extends BaseBLEActivity {
 
     private void notifyDevice() {
 
-    }
-
-    private String permissionToString(int permission) {
-        switch (permission) {
-            case BluetoothGattCharacteristic.PERMISSION_READ:
-                return "Read";
-            case BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED:
-                return "Read encrypted";
-            case BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED_MITM:
-                return "Read encrypted MITM";
-            case BluetoothGattCharacteristic.PERMISSION_WRITE:
-                return "Write";
-            case BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED:
-                return "Write encrypted";
-            case BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED_MITM:
-                return "Write encrypted MITM";
-            case BluetoothGattCharacteristic.PERMISSION_WRITE_SIGNED:
-                return "Write signed";
-            default:
-                return "Unknown";
-        }
     }
 }
