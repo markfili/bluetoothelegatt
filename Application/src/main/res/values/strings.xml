@@ -59,4 +59,5 @@
     <string name="read">read</string>
     <string name="write">write</string>
     <string name="notify">notify</string>
+    <string name="no_readable">No readable data found.</string>
 </resources>

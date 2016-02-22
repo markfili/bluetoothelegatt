@@ -47,6 +47,8 @@ public class CharacteristicActivity extends BaseBLEActivity {
 
     @Bind({R.id.prop_read, R.id.prop_write, R.id.prop_notify})
     List<TextView> propertyViews;
+    @Bind({R.id.ble_action_read, R.id.ble_action_write, R.id.ble_action_notify})
+    List<Button> propertyButtonViews;
 
     @Bind(R.id.edit_text_readable_data)
     EditText mReadableDataEditText;
@@ -120,20 +122,22 @@ public class CharacteristicActivity extends BaseBLEActivity {
     protected void gattDataAvailable(Intent intent) {
         String characteristicString = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
         if (TextUtils.isEmpty(characteristicString) || characteristicString.endsWith("\n00 00 ")) {
-            Toast.makeText(this, "No readable data found.", Toast.LENGTH_LONG).show();
             logD(TAG, "gattDataAvailable characteristic has no readable data.");
-
-            hexButton.setEnabled(false);
-            ascButton.setEnabled(false);
+            mReadableDataEditText.setHint(R.string.no_readable);
+            abledInput(false);
         } else {
             logD(TAG, characteristicString);
             showProperty();
             characteristicValues = characteristicString.split("\n");
             mReadableDataEditText.setText(characteristicValues[0]);
-
-            hexButton.setEnabled(true);
-            ascButton.setEnabled(true);
+            abledInput(true);
         }
+    }
+
+    private void abledInput(boolean enabled) {
+        mWritableDataEditText.setEnabled(enabled);
+        hexButton.setEnabled(enabled);
+        ascButton.setEnabled(enabled);
     }
 
     @Override
@@ -153,12 +157,22 @@ public class CharacteristicActivity extends BaseBLEActivity {
     }
 
     private void showProperty() {
-        for (TextView propertyView : propertyViews) {
-            propertyView.setEnabled(false);
-        }
+        resetControls();
 
         if (propertiesMap.containsKey(mCharacteristic.getProperties())) {
             propertyViews.get(propertiesMap.get(mCharacteristic.getProperties())).setEnabled(true);
+            propertyButtonViews.get(propertiesMap.get(mCharacteristic.getProperties())).setEnabled(true);
+        }
+    }
+
+    private void resetControls() {
+        resetViews(propertyViews);
+        resetViews(propertyButtonViews);
+    }
+
+    private void resetViews(List<? extends View> views) {
+        for (View view : views) {
+            view.setEnabled(false);
         }
     }
 
@@ -223,5 +237,25 @@ public class CharacteristicActivity extends BaseBLEActivity {
 
     private void notifyDevice() {
         mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
+    }
+
+    @OnClick({R.id.layout_details_device, R.id.layout_details_service, R.id.layout_details_characteristic})
+    protected void onBackToDevicesClick(View view) {
+        Intent intent = new Intent();
+        switch (view.getId()) {
+            case R.id.layout_details_device:
+                intent.setClass(this, ScanActivity.class);
+                break;
+            case R.id.layout_details_service:
+                intent.setClass(this, DeviceActivity.class);
+                break;
+            case R.id.layout_details_characteristic:
+                onBackPressed();
+                return;
+            default:
+                break;
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

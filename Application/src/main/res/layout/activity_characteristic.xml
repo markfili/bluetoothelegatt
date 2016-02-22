@@ -12,54 +12,58 @@
         layout="@layout/layout_details"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/ble_action_read"
             style="@style/button_char_style"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:enabled="false"
+            android:minWidth="1dp"
             android:text="@string/read"/>
 
         <Button
             android:id="@+id/ble_action_write"
             style="@style/button_char_style"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:enabled="false"
+            android:minWidth="1dp"
             android:text="@string/write"/>
 
         <Button
             android:id="@+id/ble_action_notify"
             style="@style/button_char_style"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:enabled="false"
+            android:minWidth="1dp"
             android:text="@string/notify"/>
 
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="match_parent"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/button_ascii"
             style="@style/button_char_style"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:enabled="false"
+            android:minWidth="1dp"
             android:text="@string/button_label_ascii"/>
 
         <Button
             android:id="@+id/button_hex"
             style="@style/button_char_style"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:enabled="false"
+            android:minWidth="1dp"
             android:text="@string/button_label_hex"/>
 
     </LinearLayout>
