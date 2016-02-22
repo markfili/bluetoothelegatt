@@ -68,8 +68,7 @@ public class CharacteristicActivity extends BaseBLEActivity {
     }
 
     private void showUI() {
-        mCharacteristicLayout.setVisibility(View.VISIBLE);
-        setTitle(mDeviceName);
+//        TODO setTitle(mDeviceName);
         showHome();
     }
 

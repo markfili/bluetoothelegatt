@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/layout_characteristic"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/details_layout">
+
+    <TextView
+        android:id="@+id/title_service_name"
+        style="@style/data_title_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="@string/title_service_data"/>
+
+    <TextView
+        android:id="@+id/label_service_uuid"
+        style="@style/data_label_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_service_name"
+        android:text="@string/label_uuid"/>
+
+    <TextView
+        android:id="@+id/service_uuid"
+        style="@style/data_value_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_service_name"
+        android:layout_toRightOf="@id/label_service_uuid"
+        android:text="@string/no_data"/>
+
+
+</RelativeLayout>

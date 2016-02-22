@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/layout_characteristic"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/details_layout">
+
+    <TextView
+        android:id="@+id/title_characteristic_name"
+        style="@style/data_title_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="@string/label_characteristic_data"/>
+
+    <TextView
+        android:id="@+id/label_characteristic_uuid"
+        style="@style/data_label_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_characteristic_name"
+        android:text="@string/label_uuid"/>
+
+    <TextView
+        android:id="@+id/characteristic_uuid"
+        style="@style/data_value_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_characteristic_name"
+        android:layout_toRightOf="@id/label_characteristic_uuid"
+        android:text="@string/no_data"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/textview_permissions_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/permission_read"/>
+
+        <TextView
+            style="@style/textview_permissions_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:text="@string/permission_write"/>
+
+        <TextView
+            style="@style/textview_permissions_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/permission_notify"/>
+    </LinearLayout>
+
+</RelativeLayout>

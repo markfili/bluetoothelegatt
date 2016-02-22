@@ -95,7 +95,7 @@ public class DeviceActivity extends BaseBLEActivity {
         mConnectionState = (TextView) findViewById(R.id.connection_state);
         mDataField = (TextView) findViewById(R.id.data_value);
 
-        setTitle(mDeviceName);
+//        TODO mDeviceName
         showHome();
     }
 

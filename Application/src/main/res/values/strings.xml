@@ -50,4 +50,7 @@
     <string name="button_label_hex_ascii">HEX/ASCII</string>
     <string name="save">Save</string>
     <string name="label_permission">Permissions:</string>
+    <string name="permission_notify">N</string>
+    <string name="permission_write">W</string>
+    <string name="permission_read">R</string>
 </resources>
