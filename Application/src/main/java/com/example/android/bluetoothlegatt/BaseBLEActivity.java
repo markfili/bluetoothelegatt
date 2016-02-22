@@ -36,7 +36,6 @@ public abstract class BaseBLEActivity extends BaseActivity {
         logD(TAG, "onStart: binding service");
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -55,7 +54,6 @@ public abstract class BaseBLEActivity extends BaseActivity {
         logD(TAG, "onPause: unregistering receiver");
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -64,7 +62,6 @@ public abstract class BaseBLEActivity extends BaseActivity {
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
     }
-
 
     // Handles various events fired by the Service.
     // ACTION_GATT_CONNECTED: connected to a GATT server.
@@ -100,7 +97,6 @@ public abstract class BaseBLEActivity extends BaseActivity {
             }
         }
     };
-
 
 
     protected void showHome() {

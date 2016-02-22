@@ -207,6 +207,6 @@ public class CharacteristicActivity extends BaseBLEActivity {
     }
 
     private void notifyDevice() {
-
+        mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
     }
 }
