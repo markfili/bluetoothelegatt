@@ -10,7 +10,7 @@ import android.widget.Toast;
 public class BaseActivity extends Activity {
 
     // set to true to enable logs, test data (paired devices) and toasts
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
         /* DEBUG LOG & TOAST */
 
     public void logD(String TAG, String message) {

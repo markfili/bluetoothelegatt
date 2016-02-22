@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -196,6 +198,34 @@ public class CharacteristicActivity extends BaseBLEActivity {
     protected void onFormatChangeClick(View button) {
         if (characteristicValues.length != 0) {
             mReadableDataEditText.setText(button.getId() == R.id.button_hex ? characteristicValues[1] : characteristicValues[0]);
+
+            // TODO convert hex to ascii from second edit text
+/*
+            String writeableText = mWritableDataEditText.getText().toString();
+            if (!TextUtils.isEmpty(writeableText)) {
+                if (button.getId() == R.id.button_hex) {
+                    byte[] data = writeableText.getBytes();
+                    StringBuilder stringBuilder = new StringBuilder(data.length);
+                    for (byte byteChar : data) {
+                        stringBuilder.append(String.format("%02X ", byteChar));
+                    }
+                    mWritableDataEditText.setText(stringBuilder);
+                } else if (button.getId() == R.id.button_ascii) {
+                    writeableText = writeableText.trim();
+
+                    String[] values = writeableText.split(" ");
+                    logD(TAG, Arrays.toString(values));
+                    char[] chars = new char[values.length];
+
+                    for (int i = 0; i < values.length; i++) {
+
+                    }
+
+                    logD(TAG, Arrays.toString(chars));
+
+                    mWritableDataEditText.setText(String.valueOf(chars));
+                }
+            }                */
         }
     }
 

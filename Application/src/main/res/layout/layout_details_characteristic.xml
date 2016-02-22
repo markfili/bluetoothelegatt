@@ -5,10 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="gone"
-    android:paddingRight="@dimen/margin_small"
-    android:paddingLeft="@dimen/margin_small"
+    android:background="?android:attr/selectableItemBackground"
     android:paddingBottom="@dimen/margin_small"
+    android:paddingLeft="@dimen/margin_small"
+    android:paddingRight="@dimen/margin_small"
+    android:visibility="gone"
     tools:showIn="@layout/layout_details"
     tools:visibility="visible">
 

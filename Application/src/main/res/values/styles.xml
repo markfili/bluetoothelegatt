@@ -12,12 +12,14 @@
     <style name="data_value_style"/>
 
     <style name="textview_permissions_style">
-    <item name="android:paddingLeft">@dimen/permissions_padding</item>
-    <item name="android:paddingRight">@dimen/permissions_padding</item>
-
+        <item name="android:paddingLeft">@dimen/permissions_padding</item>
+        <item name="android:paddingRight">@dimen/permissions_padding</item>
     </style>
 
     <style name="button_char_style">
+        <!-- FIXME rethink this strategy, won't work when activated -->
+        <!--<item name="android:textColor">@color/text_color_selector</item>-->
+        <!--<item name="android:background">@drawable/background_selector</item>-->
         <item name="android:minHeight">1dp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">12sp</item>

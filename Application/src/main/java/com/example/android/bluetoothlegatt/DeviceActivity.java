@@ -191,7 +191,6 @@ public class DeviceActivity extends BaseBLEActivity {
         mConnected = false;
         updateConnectionState(R.string.disconnected);
         invalidateOptionsMenu();
-        clearUI();
     }
 
     @Override
