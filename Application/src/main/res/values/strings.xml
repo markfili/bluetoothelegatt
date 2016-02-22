@@ -53,4 +53,9 @@
     <string name="permission_notify">N</string>
     <string name="permission_write">W</string>
     <string name="permission_read">R</string>
+    <string name="button_label_ascii">ASC</string>
+    <string name="button_label_hex">HEX</string>
+    <string name="read">read</string>
+    <string name="write">write</string>
+    <string name="notify">notify</string>
 </resources>

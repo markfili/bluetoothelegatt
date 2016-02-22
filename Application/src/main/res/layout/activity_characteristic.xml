@@ -1,70 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".CharacteristicActivity">
 
     <include
         android:id="@+id/layout_details"
         layout="@layout/layout_details"/>
 
-    <Button
-        android:id="@+id/button_format_change"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/layout_details"
-        android:text="@string/button_label_hex_ascii"/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/label_read_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/edit_text_readable_data"
-        android:labelFor="@id/edit_text_readable_data"
-        android:text="@string/label_value"/>
+        <Button
+            android:id="@+id/ble_action_read"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="1dp"
+            android:text="@string/read"/>
 
-    <EditText
-        android:id="@id/edit_text_readable_data"
+        <Button
+            android:id="@+id/ble_action_write"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="1dp"
+            android:text="@string/write"/>
+
+        <Button
+            android:id="@+id/ble_action_notify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="1dp"
+            android:text="@string/notify"/>
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:id="@+id/button_ascii"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="1dp"
+            android:text="@string/button_label_ascii"/>
+
+        <Button
+            android:id="@+id/button_hex"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="1dp"
+            android:text="@string/button_label_hex"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/button_format_change"
-        android:background="@null"
-        android:clickable="false"
-        android:editable="false"
-        android:gravity="top"
-        android:hint="@string/hint_readable_data"
-        android:inputType="none"
-        android:minLines="2"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/label_write_value"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/edit_text_readable_data"
-        android:labelFor="@+id/edit_text_writable_data"
-        android:text="@string/label_new_value"/>
+        <EditText
+            android:id="@+id/edit_text_readable_data"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:clickable="false"
+            android:editable="false"
+            android:gravity="top"
+            android:hint="@string/hint_readable_data"
+            android:inputType="none"
+            android:padding="8dp"/>
 
-    <EditText
-        android:id="@id/edit_text_writable_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/label_write_value"
-        android:gravity="top"
-        android:hint="@string/hint_writable_data"
-        android:minLines="2"/>
+        <EditText
+            android:id="@+id/edit_text_writable_data"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="top"
+            android:hint="@string/hint_writable_data"/>
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/button_save_characteristic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/holo_blue_light"
-        android:text="@string/save"
-        android:textAllCaps="true"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/white"/>
-
-</RelativeLayout>
+</LinearLayout>

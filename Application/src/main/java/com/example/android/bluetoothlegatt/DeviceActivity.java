@@ -46,11 +46,10 @@ public class DeviceActivity extends BaseBLEActivity {
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
     public static final String EXTRAS_SERVICE_POSITION = "SERVICE_POSITION";
+
     @Bind(R.id.title_device_name)
     TextView mDeviceNameTitle;
 
-    //    private TextView mConnectionState;
-//    private TextView mDataField;
     private String mDeviceName;
     private String mDeviceAddress;
     private ListView mGattServicesList;

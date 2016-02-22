@@ -30,6 +30,7 @@ public class CharacteristicActivity extends BaseBLEActivity {
     TextView mServiceNameTitle;
     @Bind(R.id.title_characteristic_name)
     TextView mCharacteristicNameTitle;
+
     @Bind(R.id.device_address)
     TextView mDeviceAddressView;
     @Bind(R.id.service_uuid)
@@ -40,6 +41,9 @@ public class CharacteristicActivity extends BaseBLEActivity {
     RelativeLayout mCharacteristicLayout;
     @Bind(R.id.characteristic_uuid)
     TextView mCharacteristicUuidView;
+
+    @Bind({ R.id.prop_read, R.id.prop_write, R.id.prop_notify})
+    List<TextView> propertyViews;
 
     @Bind(R.id.edit_text_readable_data)
     EditText mReadableDataEditText;
@@ -114,8 +118,8 @@ public class CharacteristicActivity extends BaseBLEActivity {
     protected void gattServicesDiscovered(List<BluetoothGattService> supportedGattServices) {
         mCharacteristic = supportedGattServices.get(mServicePosition).getCharacteristic(UUID.fromString(mCharacteristicUUID));
         if (mCharacteristic != null) {
-        // TODO PERMISSIONS
-        // mCharacteristicPermission.setText(permissionToString(mCharacteristic.getPermissions()));
+            // TODO PERMISSIONS
+            // mCharacteristicPermission.setText(permissionToString(mCharacteristic.getPermissions()));
             mBluetoothLeService.readCharacteristic(mCharacteristic);
         }
     }
@@ -136,27 +140,37 @@ public class CharacteristicActivity extends BaseBLEActivity {
     }
 
 
-    @OnClick(R.id.button_format_change)
-    protected void onFormatChangeClick() {
-        mReadableDataEditText.setText(TextUtils.equals(mReadableDataEditText.getText().toString(), characteristicValues[0]) ? characteristicValues[1] : characteristicValues[0]);
+    @OnClick({R.id.button_ascii, R.id.button_hex})
+    protected void onFormatChangeClick(View button) {
+        mReadableDataEditText.setText(button.getId() == R.id.button_hex ? characteristicValues[1] : characteristicValues[0]);
     }
 
-    @OnClick(R.id.button_save_characteristic)
-    protected void saveData() {
-        if (mCharacteristic.getPermissions() == BluetoothGattCharacteristic.PERMISSION_WRITE) {
-            mCharacteristic.setValue(mWritableDataEditText.getText().toString());
-            boolean saved = mBluetoothLeService.writeCharacteristic(mCharacteristic);
-            Log.d(TAG, "saveData: " + saved);
-            if (saved) {
-                Toast.makeText(this, "Written to device.", Toast.LENGTH_LONG).show();
-                onBackPressed();
-            } else {
-                // TODO handle failure
-                Toast.makeText(this, "Failed writing to device. Check BLE connectivity.", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Toast.makeText(this, "I'm sorry, Dave. I'm afraid I can't do that.", Toast.LENGTH_LONG).show();
-            Toast.makeText(this, "It's not permitted by the device.", Toast.LENGTH_LONG).show();
+    @OnClick({R.id.ble_action_read, R.id.ble_action_write, R.id.ble_action_notify})
+    protected void saveData(View view) {
+        switch (view.getId()) {
+            case R.id.ble_action_write:
+                if (mCharacteristic.getPermissions() == BluetoothGattCharacteristic.PERMISSION_WRITE) {
+                    mCharacteristic.setValue(mWritableDataEditText.getText().toString());
+                    boolean saved = mBluetoothLeService.writeCharacteristic(mCharacteristic);
+                    Log.d(TAG, "saveData: " + saved);
+                    if (saved) {
+                        Toast.makeText(this, "Written to device.", Toast.LENGTH_LONG).show();
+                        onBackPressed();
+                    } else {
+                        // TODO handle failure
+                        Toast.makeText(this, "Failed writing to device. Check BLE connectivity.", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(this, "I'm sorry, Dave. I'm afraid I can't do that.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "It's not permitted by the device.", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.ble_action_read:
+                break;
+            case R.id.ble_action_notify:
+                break;
+            default:
+                break;
         }
     }
 

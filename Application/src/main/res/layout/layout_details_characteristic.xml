@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:visibility="gone"
-    tools:visibility="visible"
-    tools:showIn="@layout/layout_details">
+    tools:showIn="@layout/layout_details"
+    tools:visibility="visible">
 
     <TextView
         android:id="@+id/title_characteristic_name"
@@ -40,24 +40,37 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/prop_read"
             style="@style/textview_permissions_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/permission_read"/>
+            android:background="@drawable/background_selector"
+
+            android:enabled="false"
+            android:text="@string/permission_read"
+            android:textColor="@color/text_color_selector"/>
 
         <TextView
+            android:id="@+id/prop_write"
             style="@style/textview_permissions_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="2dp"
-            android:text="@string/permission_write"/>
+            android:background="@drawable/background_selector"
+            android:enabled="true"
+            android:text="@string/permission_write"
+            android:textColor="@color/text_color_selector"/>
 
         <TextView
+            android:id="@+id/prop_notify"
             style="@style/textview_permissions_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/permission_notify"/>
+            android:background="@drawable/background_selector"
+            android:enabled="false"
+            android:text="@string/permission_notify"
+            android:textColor="@color/text_color_selector"/>
     </LinearLayout>
 
 </RelativeLayout>
