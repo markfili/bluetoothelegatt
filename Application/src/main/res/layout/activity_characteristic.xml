@@ -18,30 +18,27 @@
 
         <Button
             android:id="@+id/ble_action_read"
+            style="@style/button_char_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:minHeight="1dp"
-            android:text="@string/read"
-            android:textAllCaps="true"/>
+            android:text="@string/read"/>
 
         <Button
             android:id="@+id/ble_action_write"
+            style="@style/button_char_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:minHeight="1dp"
-            android:text="@string/write"
-            android:textAllCaps="true"/>
+            android:text="@string/write"/>
 
         <Button
             android:id="@+id/ble_action_notify"
+            style="@style/button_char_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:minHeight="1dp"
-            android:text="@string/notify"
-            android:textAllCaps="true"/>
+            android:text="@string/notify"/>
 
         <Space
             android:layout_width="20dp"
@@ -49,18 +46,20 @@
 
         <Button
             android:id="@+id/button_ascii"
+            style="@style/button_char_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:minHeight="1dp"
+            android:enabled="false"
             android:text="@string/button_label_ascii"/>
 
         <Button
             android:id="@+id/button_hex"
+            style="@style/button_char_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:minHeight="1dp"
+            android:enabled="false"
             android:text="@string/button_label_hex"/>
 
     </LinearLayout>

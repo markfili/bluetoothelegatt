@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -51,6 +52,11 @@ public class CharacteristicActivity extends BaseBLEActivity {
     EditText mReadableDataEditText;
     @Bind(R.id.edit_text_writable_data)
     EditText mWritableDataEditText;
+
+    @Bind(R.id.button_hex)
+    Button hexButton;
+    @Bind(R.id.button_ascii)
+    Button ascButton;
 
     private String mCharacteristicUUID;
     private BluetoothGattCharacteristic mCharacteristic;
@@ -114,12 +120,19 @@ public class CharacteristicActivity extends BaseBLEActivity {
     protected void gattDataAvailable(Intent intent) {
         String characteristicString = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
         if (TextUtils.isEmpty(characteristicString) || characteristicString.endsWith("\n00 00 ")) {
-            Toast.makeText(this, "gattDataAvailable characteristic has no readable data.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "No readable data found.", Toast.LENGTH_LONG).show();
+            logD(TAG, "gattDataAvailable characteristic has no readable data.");
+
+            hexButton.setEnabled(false);
+            ascButton.setEnabled(false);
         } else {
             logD(TAG, characteristicString);
             showProperty();
             characteristicValues = characteristicString.split("\n");
             mReadableDataEditText.setText(characteristicValues[0]);
+
+            hexButton.setEnabled(true);
+            ascButton.setEnabled(true);
         }
     }
 
@@ -167,7 +180,9 @@ public class CharacteristicActivity extends BaseBLEActivity {
 
     @OnClick({R.id.button_ascii, R.id.button_hex})
     protected void onFormatChangeClick(View button) {
-        mReadableDataEditText.setText(button.getId() == R.id.button_hex ? characteristicValues[1] : characteristicValues[0]);
+        if (characteristicValues.length != 0) {
+            mReadableDataEditText.setText(button.getId() == R.id.button_hex ? characteristicValues[1] : characteristicValues[0]);
+        }
     }
 
     @OnClick({R.id.ble_action_read, R.id.ble_action_write, R.id.ble_action_notify})

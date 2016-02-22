@@ -2,8 +2,7 @@
 <resources>
 
     <style name="data_title_style">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textStyle">italic</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="data_label_style">
@@ -16,6 +15,12 @@
     <item name="android:paddingLeft">@dimen/permissions_padding</item>
     <item name="android:paddingRight">@dimen/permissions_padding</item>
 
+    </style>
+
+    <style name="button_char_style">
+        <item name="android:minHeight">1dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>
