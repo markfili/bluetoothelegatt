@@ -14,8 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +71,7 @@ public class CharacteristicActivity extends BaseBLEActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_characteristic);
         ButterKnife.bind(this);
+
         getIntentData();
         showUI();
     }
@@ -114,41 +113,16 @@ public class CharacteristicActivity extends BaseBLEActivity {
         mServiceNameTitle.setText(GattServicesAttributes.lookup(mServiceUUID, getString(R.string.unknown_service)));
         mCharacteristicUuidView.setText(mCharacteristicUUID);
 
+        // setup properties values for comparison
         propertiesMap = new HashMap<>();
         propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_READ, 0);
         propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_WRITE, 1);
         propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_NOTIFY, 2);
     }
 
-    @Override
-    protected void gattDataAvailable(Intent intent) {
-        String characteristicString = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
-        if (TextUtils.isEmpty(characteristicString) || characteristicString.endsWith("\n00 00 ")) {
-            logD(TAG, "gattDataAvailable characteristic has no readable data.");
-            mReadableDataEditText.setHint(R.string.no_readable);
-            abledInput(false);
-        } else {
-            logD(TAG, characteristicString);
-            showProperty();
-            characteristicValues = characteristicString.split("\n");
-            mReadableDataEditText.setText(characteristicValues[0]);
-            abledInput(true);
-        }
-    }
-
-    private void abledInput(boolean enabled) {
-        mWritableDataEditText.setEnabled(enabled);
-        hexButton.setEnabled(enabled);
-        ascButton.setEnabled(enabled);
-    }
-
-    @Override
-    protected void gattServicesDiscovered(List<BluetoothGattService> supportedGattServices) {
-        mCharacteristic = supportedGattServices.get(mServicePosition).getCharacteristic(UUID.fromString(mCharacteristicUUID));
-        if (mCharacteristic == null) logD(TAG, "gattServicesDiscovered null characteristic has no readable data.");
-        readCharacteristic();
-    }
-
+    /**
+     * Initializes reading of the Characteristic.
+     */
     private void readCharacteristic() {
         if (mCharacteristic != null) {
             logD(TAG, "reading characteristic");
@@ -158,15 +132,20 @@ public class CharacteristicActivity extends BaseBLEActivity {
         }
     }
 
+    /**
+     * Enables views related to properties that are available on BLE device.
+     */
     private void showProperty() {
         resetControls();
-
         if (propertiesMap.containsKey(mCharacteristic.getProperties())) {
             propertyViews.get(propertiesMap.get(mCharacteristic.getProperties())).setEnabled(true);
             propertyButtonViews.get(propertiesMap.get(mCharacteristic.getProperties())).setEnabled(true);
         }
     }
 
+    /**
+     * Disables every property related view - buttons and TextView properties indicators.
+     */
     private void resetControls() {
         resetViews(propertyViews);
         resetViews(propertyButtonViews);
@@ -177,6 +156,109 @@ public class CharacteristicActivity extends BaseBLEActivity {
             view.setEnabled(false);
         }
     }
+
+    /**
+     * Converts HEX to String.
+     * NumberFormatException will be thrown while parsing
+     * to indicate that the text is already in String.
+     *
+     * @param trimmedHexValues String values made from mWritableDataEditText's HEX current text.
+     * @return char[] if conversion to String was success, null if text format is already a String and cannot be parsed.
+     */
+    private char[] convertTostring(String[] trimmedHexValues) {
+        char[] chars = new char[trimmedHexValues.length];
+        try {
+            for (int i = 0; i < trimmedHexValues.length; i++) {
+                // parse HEX values to characters, throw exception due to non-HEX characters
+                chars[i] = (char) Integer.parseInt(trimmedHexValues[i], 16);
+            }
+            return chars;
+        } catch (NumberFormatException ignored) {
+            // do nothing if the values entered are not HEX,
+            // the conversion will occur in the next ASC/HEX conversion
+            logD(TAG, "asc button with " + ignored.getMessage());
+            return null;
+        }
+    }
+
+
+    /**
+     * Checks if writableString contains String or HEX formatted text and converts it appropriately.
+     *
+     * @param writableString String to which to check format.
+     * @return byte array constructed either by converting text to bytes, or converting HEX formatted String to real HEX values.
+     */
+    private byte[] getBytesFromString(String writableString) {
+        String writableNoSpaces = writableString.replace(" ", "");
+
+        byte[] valueBytes;
+        // if entered value is in HEX
+        if (writableNoSpaces.matches("[0-9a-fA-F]+")) {
+            // convert String in HEX format to byte array
+            valueBytes = toHexValue(writableNoSpaces);
+        } else {
+            valueBytes = writableString.getBytes();
+        }
+        return valueBytes;
+    }
+
+    /**
+     * Converts text with HEX format content to real HEX values.
+     *
+     * @param text to convert
+     * @return byte array with HEX values.
+     */
+    private byte[] toHexValue(String text) {
+        byte[] values = new byte[text.length()];
+        for (int i = 0; i < text.toCharArray().length; i++) {
+            values[i] = Byte.parseByte(text.substring(i, i + 1), 16);
+        }
+        return values;
+    }
+
+    /**
+     * Enables notifications on BLE peripheral device.
+     */
+    private void notifyDevice() {
+        mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
+    }
+
+    private void setReadableEditText(int position) {
+        if (characteristicValues != null)
+            if (characteristicValues.length != 0) {
+                mReadableDataEditText.setText(characteristicValues[position]);
+            }
+    }
+
+    @Override
+    protected void gattDataAvailable(Intent intent) {
+        String characteristicString = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
+        if (TextUtils.isEmpty(characteristicString) || characteristicString.endsWith("\n00 00 ")) {
+            logD(TAG, "gattDataAvailable characteristic has no readable data.");
+            mReadableDataEditText.setHint(R.string.no_readable);
+            hexButton.setEnabled(false);
+            ascButton.setEnabled(false);
+        } else {
+            logD(TAG, characteristicString);
+            showProperty();
+            characteristicValues = characteristicString.split("\n");
+            mReadableDataEditText.setText(characteristicValues[0]);
+            abledInput(true);
+        }
+    }
+
+    private void abledInput(boolean enabled) {
+        hexButton.setEnabled(enabled);
+        ascButton.setEnabled(!enabled);
+    }
+
+    @Override
+    protected void gattServicesDiscovered(List<BluetoothGattService> supportedGattServices) {
+        mCharacteristic = supportedGattServices.get(mServicePosition).getCharacteristic(UUID.fromString(mCharacteristicUUID));
+        if (mCharacteristic == null) logD(TAG, "gattServicesDiscovered null characteristic has no readable data.");
+        readCharacteristic();
+    }
+
 
     @Override
     protected void gattDisconnected() {
@@ -194,53 +276,92 @@ public class CharacteristicActivity extends BaseBLEActivity {
     }
 
 
+    /**
+     * Handles clicks on conversion control buttons.
+     * Converts from ASC to HEX and vice-versa depending on button clicked.
+     *
+     * @param button clicked.
+     */
     @OnClick({R.id.button_ascii, R.id.button_hex})
     protected void onFormatChangeClick(View button) {
-        if (characteristicValues.length != 0) {
-            mReadableDataEditText.setText(button.getId() == R.id.button_hex ? characteristicValues[1] : characteristicValues[0]);
+        String writableText = mWritableDataEditText.getText().toString();
 
-            // TODO convert hex to ascii from second edit text
-/*
-            String writeableText = mWritableDataEditText.getText().toString();
-            if (!TextUtils.isEmpty(writeableText)) {
-                if (button.getId() == R.id.button_hex) {
-                    byte[] data = writeableText.getBytes();
+        if (button.getId() == R.id.button_hex) {
+            setReadableEditText(1);
+
+            // convert writable EditText value from String to HEX
+            if (!TextUtils.isEmpty(writableText)) {
+
+                // check if text is already in HEX
+                if (!writableText.replace(" ", "").matches("[0-9a-fA-F]+")) {
+                    byte[] data = writableText.getBytes();
+
                     StringBuilder stringBuilder = new StringBuilder(data.length);
+                    // append text value's bytes in pairs
                     for (byte byteChar : data) {
+                        // format "DE AD F1 89 "
                         stringBuilder.append(String.format("%02X ", byteChar));
                     }
-                    mWritableDataEditText.setText(stringBuilder);
-                } else if (button.getId() == R.id.button_ascii) {
-                    writeableText = writeableText.trim();
-
-                    String[] values = writeableText.split(" ");
-                    logD(TAG, Arrays.toString(values));
-                    char[] chars = new char[values.length];
-
-                    for (int i = 0; i < values.length; i++) {
-
-                    }
-
-                    logD(TAG, Arrays.toString(chars));
-
-                    mWritableDataEditText.setText(String.valueOf(chars));
+                    mWritableDataEditText.setText("");
+                    mWritableDataEditText.append(stringBuilder);
                 }
-            }                */
+            }
+            ascButton.setEnabled(true);
+            hexButton.setEnabled(false);
+
+        } else if (button.getId() == R.id.button_ascii) {
+            setReadableEditText(0);
+
+            // convert writable EditText value from HEX to String (ASCII)
+            if (!TextUtils.isEmpty(writableText)) {
+                // trim surrounding whitespace
+                writableText = writableText.trim();
+
+                // remove whitespaces and extract entries
+                String[] trimmedHexValues = writableText.split(" ");
+
+                // check if text entered is already in HEX
+                char[] chars = convertTostring(trimmedHexValues);
+
+                // if it wasn't already HEX, show converted text
+                if (chars != null) {
+                    mWritableDataEditText.setText("");
+                    mWritableDataEditText.append(new String(chars));
+                }
+            }
+            hexButton.setEnabled(true);
+            ascButton.setEnabled(false);
         }
     }
 
+
+    /**
+     * Handles click actions on property control elements: buttons Read, Write and Notify.
+     *
+     * @param button Button clicked.
+     */
     @OnClick({R.id.ble_action_read, R.id.ble_action_write, R.id.ble_action_notify})
-    protected void saveData(View view) {
-        switch (view.getId()) {
+    protected void saveData(View button) {
+        switch (button.getId()) {
             case R.id.ble_action_read:
                 readCharacteristic();
                 break;
             case R.id.ble_action_write:
                 if (mCharacteristic != null) {
+
                     if (mCharacteristic.getPermissions() == BluetoothGattCharacteristic.PERMISSION_WRITE) {
-                        mCharacteristic.setValue(mWritableDataEditText.getText().toString());
+                        // get string from writable box
+                        String writableString = mWritableDataEditText.getText().toString().trim();
+
+                        // check if writableString is in HEX or text format
+                        byte[] valueBytes = getBytesFromString(writableString);
+                        // set value to Characteristic
+                        mCharacteristic.setValue(valueBytes);
+                        // try to save the characteristic
                         boolean saved = mBluetoothLeService.writeCharacteristic(mCharacteristic);
+
                         Log.d(TAG, "saveData: " + saved);
+
                         if (saved) {
                             Toast.makeText(this, "Written to device.", Toast.LENGTH_LONG).show();
                             onBackPressed();
@@ -265,14 +386,16 @@ public class CharacteristicActivity extends BaseBLEActivity {
         }
     }
 
-    private void notifyDevice() {
-        mBluetoothLeService.setCharacteristicNotification(mCharacteristic, true);
-    }
 
+    /**
+     * Handles click events on layouts with details.
+     *
+     * @param layout clicked.
+     */
     @OnClick({R.id.layout_details_device, R.id.layout_details_service, R.id.layout_details_characteristic})
-    protected void onBackToDevicesClick(View view) {
+    protected void onBackToDevicesClick(View layout) {
         Intent intent = new Intent();
-        switch (view.getId()) {
+        switch (layout.getId()) {
             case R.id.layout_details_device:
                 intent.setClass(this, ScanActivity.class);
                 break;
