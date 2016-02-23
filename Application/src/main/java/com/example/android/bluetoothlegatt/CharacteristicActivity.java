@@ -401,6 +401,8 @@ public class CharacteristicActivity extends BaseBLEActivity {
                 break;
             case R.id.layout_details_service:
                 intent.setClass(this, DeviceActivity.class);
+                intent.putExtra(DeviceActivity.EXTRAS_DEVICE_NAME, mDeviceName);
+                intent.putExtra(DeviceActivity.EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
                 break;
             case R.id.layout_details_characteristic:
                 onBackPressed();
