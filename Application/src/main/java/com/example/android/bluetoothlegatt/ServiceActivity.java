@@ -59,6 +59,7 @@ public class ServiceActivity extends BaseBLEActivity {
             intent.putExtra(ServiceActivity.EXTRAS_CHARACTERISTIC_UUID, mBluetoothGattService.getCharacteristics().get(position).getUuid().toString());
 
             mBluetoothLeService.close();
+            gattDisconnected();
             startActivity(intent);
         }
     };
