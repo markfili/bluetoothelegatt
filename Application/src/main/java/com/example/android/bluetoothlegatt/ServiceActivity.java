@@ -91,12 +91,13 @@ public class ServiceActivity extends BaseBLEActivity {
     }
 
     private void setupUI() {
-        mServiceDetailsLayout.setVisibility(View.VISIBLE);
         mDeviceNameTitle.setText(mDeviceName);
         showHome();
     }
 
     protected void displayGattCharacteristics(BluetoothGattService gattService) {
+        mServiceDetailsLayout.setVisibility(View.VISIBLE);
+
         mServiceUUID = gattService.getUuid().toString();
 
         // fill info header with service info
