@@ -20,7 +20,7 @@ public abstract class BaseBLEActivity extends BaseActivity {
 
     private static final String TAG = BaseBLEActivity.class.getSimpleName();
 
-    public static final long SCAN_PERIOD = 10;
+    public static final long DEBUG_SCAN_PERIOD = 10;
 
     protected BluetoothLeService mBluetoothLeService;
     protected String mDeviceName;

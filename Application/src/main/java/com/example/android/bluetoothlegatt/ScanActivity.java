@@ -242,7 +242,7 @@ public class ScanActivity extends ListActivity {
                         }
                     }
                 }
-            }, BaseBLEActivity.DEBUG ? BaseBLEActivity.SCAN_PERIOD : SCAN_PERIOD);
+            }, BaseBLEActivity.DEBUG ? BaseBLEActivity.DEBUG_SCAN_PERIOD : SCAN_PERIOD);
 
             mScanning = true;
 

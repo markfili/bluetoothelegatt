@@ -27,6 +27,11 @@ public class CharacteristicActivity extends BaseBLEActivity {
 
     private static final String TAG = CharacteristicActivity.class.getSimpleName();
 
+    // codes for activating indicator and button according to available device property
+    private static final int READ_VIEW_GROUP = 0;
+    private static final int WRITE_VIEW_GROUP = 1;
+    private static final int NOTIFY_VIEW_GROUP = 2;
+
     @Bind(R.id.title_device_name)
     TextView mDeviceNameTitle;
     @Bind(R.id.title_service_name)
@@ -115,9 +120,11 @@ public class CharacteristicActivity extends BaseBLEActivity {
 
         // setup properties values for comparison
         propertiesMap = new HashMap<>();
-        propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_READ, 0);
-        propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_WRITE, 1);
-        propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_NOTIFY, 2);
+        propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_READ, READ_VIEW_GROUP);
+        propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_WRITE, WRITE_VIEW_GROUP);
+        propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE, WRITE_VIEW_GROUP);
+        propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_SIGNED_WRITE, WRITE_VIEW_GROUP);
+        propertiesMap.put(BluetoothGattCharacteristic.PROPERTY_NOTIFY, NOTIFY_VIEW_GROUP);
     }
 
     /**
@@ -349,7 +356,7 @@ public class CharacteristicActivity extends BaseBLEActivity {
             case R.id.ble_action_write:
                 if (mCharacteristic != null) {
 
-                    if (mCharacteristic.getPermissions() == BluetoothGattCharacteristic.PERMISSION_WRITE) {
+//                    if (mCharacteristic.getPermissions() == BluetoothGattCharacteristic.PERMISSION_WRITE) {
                         // get string from writable box
                         String writableString = mWritableDataEditText.getText().toString().trim();
 
@@ -369,10 +376,10 @@ public class CharacteristicActivity extends BaseBLEActivity {
                             // TODO handle failure
                             Toast.makeText(this, "Failed writing to device. Check BLE connectivity.", Toast.LENGTH_LONG).show();
                         }
-                    } else {
-                        Toast.makeText(this, "I'm sorry, Dave. I'm afraid I can't do that.", Toast.LENGTH_LONG).show();
-                        Toast.makeText(this, "It's not permitted by the device.", Toast.LENGTH_LONG).show();
-                    }
+//                    } else {
+//                        Toast.makeText(this, "I'm sorry, Dave. I'm afraid I can't do that.", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(this, "It's not permitted by the device.", Toast.LENGTH_LONG).show();
+//                    }
                 } else {
                     logD(TAG, "characteristic null");
                 }
