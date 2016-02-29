@@ -9,6 +9,8 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ public abstract class BaseBLEActivity extends BaseActivity {
     protected String mDeviceName;
     protected String mDeviceAddress;
     protected int mServicePosition;
+    private boolean mConnected = false;
 
     @Override
     protected void onStart() {
@@ -61,6 +64,35 @@ public abstract class BaseBLEActivity extends BaseActivity {
         logD(TAG, "onDestroy: unbinding service");
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.gatt_services, menu);
+        if (mConnected) {
+            menu.findItem(R.id.menu_connect).setVisible(false);
+            menu.findItem(R.id.menu_disconnect).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_connect).setVisible(true);
+            menu.findItem(R.id.menu_disconnect).setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_connect:
+                reconnectToDevice();
+                return true;
+            case R.id.menu_disconnect:
+                mBluetoothLeService.disconnect();
+                return true;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     // Handles various events fired by the Service.
@@ -109,9 +141,17 @@ public abstract class BaseBLEActivity extends BaseActivity {
 
     protected abstract void gattServicesDiscovered(List<BluetoothGattService> supportedGattServices);
 
-    protected abstract void gattDisconnected();
+    protected void gattDisconnected() {
+        mConnected = false;
+        updateConnectionState(R.string.disconnected);
+        invalidateOptionsMenu();
+    }
 
-    protected abstract void gattConnected();
+    protected void gattConnected() {
+        mConnected = true;
+        updateConnectionState(R.string.connected);
+        invalidateOptionsMenu();
+    }
 
     protected abstract void gattDataWritten();
 
@@ -120,6 +160,17 @@ public abstract class BaseBLEActivity extends BaseActivity {
         if (mBluetoothLeService.checkBTState(this)) {
             mBluetoothLeService.connect(mDeviceAddress);
         }
+    }
+
+    private void updateConnectionState(final int resourceId) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                // TODO update connection state
+//                mConnectionState.setText(resourceId);
+            }
+        });
     }
 
     public void setmDeviceName(String mDeviceName) {

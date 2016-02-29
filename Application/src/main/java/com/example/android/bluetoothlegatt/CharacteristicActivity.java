@@ -266,17 +266,6 @@ public class CharacteristicActivity extends BaseBLEActivity {
         readCharacteristic();
     }
 
-
-    @Override
-    protected void gattDisconnected() {
-
-    }
-
-    @Override
-    protected void gattConnected() {
-
-    }
-
     @Override
     protected void gattDataWritten() {
         // TODO exit or refresh data

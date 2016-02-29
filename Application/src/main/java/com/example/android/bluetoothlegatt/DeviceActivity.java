@@ -53,7 +53,6 @@ public class DeviceActivity extends BaseBLEActivity {
     private String mDeviceName;
     private String mDeviceAddress;
     private ListView mGattServicesList;
-    private boolean mConnected = false;
 
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
@@ -101,45 +100,6 @@ public class DeviceActivity extends BaseBLEActivity {
         showHome();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.gatt_services, menu);
-        if (mConnected) {
-            menu.findItem(R.id.menu_connect).setVisible(false);
-            menu.findItem(R.id.menu_disconnect).setVisible(true);
-        } else {
-            menu.findItem(R.id.menu_connect).setVisible(true);
-            menu.findItem(R.id.menu_disconnect).setVisible(false);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_connect:
-                reconnectToDevice();
-                return true;
-            case R.id.menu_disconnect:
-                mBluetoothLeService.disconnect();
-                return true;
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void updateConnectionState(final int resourceId) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                // TODO update connection state
-//                mConnectionState.setText(resourceId);
-            }
-        });
-    }
 
     private void displayData(String data) {
         if (data != null) {
@@ -184,20 +144,6 @@ public class DeviceActivity extends BaseBLEActivity {
     @Override
     protected void gattServicesDiscovered(List<BluetoothGattService> supportedGattServices) {
         displayGattServices(supportedGattServices);
-    }
-
-    @Override
-    protected void gattDisconnected() {
-        mConnected = false;
-        updateConnectionState(R.string.disconnected);
-        invalidateOptionsMenu();
-    }
-
-    @Override
-    protected void gattConnected() {
-        mConnected = true;
-        updateConnectionState(R.string.connected);
-        invalidateOptionsMenu();
     }
 
     @Override
