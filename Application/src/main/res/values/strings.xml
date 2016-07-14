@@ -14,6 +14,7 @@
      limitations under the License.
 -->
 <resources>
+    <string name="app_name">KC BLE UTILITY</string>
     <string name="ble_not_supported">BLE is not supported</string>
     <string name="label_data">Data:</string>
     <string name="label_device_address">Device address:</string>
@@ -33,4 +34,30 @@
     <string name="menu_disconnect">Disconnect</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
+    <string name="label_uuid">UUID:</string>
+    <string name="label_instance_id">Instance id:</string>
+    <string name="label_service_type">Type:</string>
+    <string name="title_service_data">Service data</string>
+    <string name="bt_needed">Bluetooth needs to be enabled to use this app.</string>
+    <string name="permissions_required">Permissions are required to run Bluetooth discovery. Restart the app to try again.</string>
+    <string name="label_characteristic_data">Characteristic data</string>
+    <string name="label_device_data">Device data</string>
+    <string name="primary">Primary</string>
+    <string name="secondary">Secondary</string>
+    <string name="label_value">Value:</string>
+    <string name="label_new_value">New value:</string>
+    <string name="hint_writable_data">Writable data</string>
+    <string name="hint_readable_data">Readable data</string>
+    <string name="button_label_hex_ascii">HEX/ASCII</string>
+    <string name="save">Save</string>
+    <string name="label_permission">Permissions:</string>
+    <string name="permission_notify">N</string>
+    <string name="permission_write">W</string>
+    <string name="permission_read">R</string>
+    <string name="button_label_ascii">ASC</string>
+    <string name="button_label_hex">HEX</string>
+    <string name="read">read</string>
+    <string name="write">write</string>
+    <string name="notify">notify</string>
+    <string name="no_readable">No readable data found.</string>
 </resources>
